@@ -109,8 +109,10 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([AppPageNode(page: APage())]),
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: APage())]),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -155,8 +157,10 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([AppPageNode(page: DPage())]),
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: DPage())]),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -208,8 +212,10 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([AppPageNode(page: DPage())]),
+                routes: routes,
+                initialStackBuilder: () =>
+                    NavigationStack([AppPageNode(page: DPage())]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -263,8 +269,10 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([AppPageNode(page: KPage())]),
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: KPage())]),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -311,8 +319,10 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([AppPageNode(page: DPage())]),
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: DPage())]),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -365,21 +375,24 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([
-                    AppPageNode(
-                        page: DPage(),
-                        crossroad: NavigationCrossroad(
-                            activeBranch: NestingBranch.shop,
-                            availableBranches: {
-                              NestingBranch.shop: NavigationStack(
-                                [
-                                  AppPageNode(page: EPage()),
-                                  AppPageNode(page: GPage()),
-                                ],
-                              )
-                            }))
-                  ]),
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack(
+                    [
+                      AppPageNode(
+                          page: DPage(),
+                          crossroad: NavigationCrossroad(
+                              activeBranch: NestingBranch.shop,
+                              availableBranches: {
+                                NestingBranch.shop: NavigationStack(
+                                  [
+                                    AppPageNode(page: EPage()),
+                                    AppPageNode(page: GPage()),
+                                  ],
+                                )
+                              }))
+                    ],
+                  ),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -460,12 +473,13 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([
+                routes: routes,
+                initialStackBuilder: () => NavigationStack([
                   AppPageNode(page: APage()),
                   AppPageNode(page: BPage()),
                   AppPageNode(page: CPage()),
                 ]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -509,8 +523,8 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack([
                     AppPageNode(
                       page: DPage(),
                       crossroad: NavigationCrossroad(
@@ -526,6 +540,7 @@ void main() {
                       ),
                     ),
                   ]),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -606,8 +621,10 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([AppPageNode(page: DPage())]),
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: DPage())]),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -636,8 +653,8 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack(
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack(
                     [
                       AppPageNode(
                         page: KPage(),
@@ -653,6 +670,7 @@ void main() {
                       )
                     ],
                   ),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -698,8 +716,10 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([AppPageNode(page: APage())]),
+                routes: routes,
+                initialStackBuilder: () =>
+                    NavigationStack([AppPageNode(page: APage())]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -726,8 +746,8 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack([
                     AppPageNode(
                       page: DPage(),
                       crossroad: NavigationCrossroad(
@@ -743,6 +763,7 @@ void main() {
                       ),
                     ),
                   ]),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -802,8 +823,10 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([AppPageNode(page: DPage())]),
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: DPage())]),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -862,8 +885,10 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser: MyRouteInformationParser(
-                  routes,
-                  () => NavigationStack([AppPageNode(page: KPage())]),
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: KPage())]),
+                  page404: TestPage404(),
                 ),
                 routerDelegate: RoutebornRootRouterDelegate(navNotifier),
               ),
@@ -939,8 +964,10 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([AppPageNode(page: DPage())]),
+                routes: routes,
+                initialStackBuilder: () =>
+                    NavigationStack([AppPageNode(page: DPage())]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -991,8 +1018,10 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([AppPageNode(page: APage())]),
+                routes: routes,
+                initialStackBuilder: () =>
+                    NavigationStack([AppPageNode(page: APage())]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -1047,8 +1076,10 @@ void main() {
           ),
           child: MaterialApp.router(
             routeInformationParser: MyRouteInformationParser(
-              routes,
-              () => NavigationStack([AppPageNode(page: DPage())]),
+              routes: routes,
+              initialStackBuilder: () =>
+                  NavigationStack([AppPageNode(page: DPage())]),
+              page404: TestPage404(),
             ),
             routerDelegate: RoutebornRootRouterDelegate(navNotifier),
           ),
@@ -1097,8 +1128,8 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([
+                routes: routes,
+                initialStackBuilder: () => NavigationStack([
                   AppPageNode(
                     page: DPage(),
                     crossroad: NavigationCrossroad(
@@ -1113,6 +1144,7 @@ void main() {
                     ),
                   )
                 ]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -1162,8 +1194,8 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([
+                routes: routes,
+                initialStackBuilder: () => NavigationStack([
                   AppPageNode(
                     page: DPage(),
                     crossroad: NavigationCrossroad(
@@ -1176,6 +1208,7 @@ void main() {
                     ),
                   )
                 ]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -1252,8 +1285,10 @@ void main() {
                 );
               },
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([AppPageNode(page: APage())]),
+                routes: routes,
+                initialStackBuilder: () =>
+                    NavigationStack([AppPageNode(page: APage())]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -1310,8 +1345,10 @@ void main() {
                 );
               },
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([AppPageNode(page: APage())]),
+                routes: routes,
+                initialStackBuilder: () =>
+                    NavigationStack([AppPageNode(page: APage())]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -1362,8 +1399,10 @@ void main() {
                 );
               },
               routeInformationParser: MyRouteInformationParser(
-                routes,
-                () => NavigationStack([AppPageNode(page: APage())]),
+                routes: routes,
+                initialStackBuilder: () =>
+                    NavigationStack([AppPageNode(page: APage())]),
+                page404: TestPage404(),
               ),
               routerDelegate: RoutebornRootRouterDelegate(navNotifier),
             ),
@@ -1379,6 +1418,8 @@ void main() {
     );
   });
 }
+
+class TestPage404 extends Fake implements AppPage {}
 
 class APage extends AppPage {
   static const String pageKey = 'a';

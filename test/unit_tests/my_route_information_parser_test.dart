@@ -100,8 +100,10 @@ void main() {
 
   Future<PagesConfiguration> routeInfo(String route) {
     return MyRouteInformationParser(
-            routes, () => NavigationStack([AppPageNode(page: EPage())]))
-        .parseRouteInformation(
+      routes: routes,
+      initialStackBuilder: () => NavigationStack([AppPageNode(page: EPage())]),
+      page404: TestPage404(),
+    ).parseRouteInformation(
       RouteInformation(location: route),
     );
   }
@@ -132,7 +134,7 @@ void main() {
                     'http://localhost/${EPage.pageKey}/${BPage.pageKey}')
                 .then((value) => value.pagesStack),
             appPageNodesStackEquals([
-              TestNode(Page404, null),
+              TestNode(TestPage404, null),
             ]),
           );
         },
@@ -162,7 +164,7 @@ void main() {
                     'http://localhost/${EPage.pageKey}/${CPage.pageKey}/5/${BPage.pageKey}/2')
                 .then((value) => value.pagesStack),
             appPageNodesStackEquals([
-              TestNode(Page404, null),
+              TestNode(TestPage404, null),
             ]),
           );
         },
@@ -192,7 +194,7 @@ void main() {
                     'http://localhost/${EPage.pageKey}/${CPage.pageKey}/5/2/${BPage.pageKey}/2/${APage.pageKey}')
                 .then((value) => value.pagesStack),
             appPageNodesStackEquals([
-              TestNode(Page404, null),
+              TestNode(TestPage404, null),
             ]),
           );
         },
@@ -270,13 +272,13 @@ void main() {
 
           expect(
             pagesConfig.appPagesStack.map((e) => e.runtimeType).toList(),
-            orderedEquals(<Type>[Page404]),
+            orderedEquals(<Type>[TestPage404]),
           );
 
           expect(
             pagesConfig.pagesStack,
             appPageNodesStackEquals([
-              TestNode(Page404, null),
+              TestNode(TestPage404, null),
             ]),
           );
         },
@@ -567,7 +569,7 @@ class BPage extends Fake implements AppPage {
       }
     }
 
-    return Tuple2(Page404(), remainingPathArguments);
+    return Tuple2(TestPage404(), remainingPathArguments);
   }
 }
 
@@ -589,7 +591,7 @@ class CPage extends Fake implements AppPage {
       }
     }
 
-    return Tuple2(Page404(), remainingPathArguments);
+    return Tuple2(TestPage404(), remainingPathArguments);
   }
 }
 
@@ -607,7 +609,7 @@ class DPage extends Fake implements AppPage {
       }
     }
 
-    return Tuple2(Page404(), remainingPathArguments);
+    return Tuple2(TestPage404(), remainingPathArguments);
   }
 }
 
@@ -618,3 +620,5 @@ class EPage extends Fake implements AppPage {
 class FPage extends Fake implements AppPage {
   static const String pageKey = 'f';
 }
+
+class TestPage404 extends Fake implements AppPage {}
