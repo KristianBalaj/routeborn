@@ -10,27 +10,34 @@ class FakeCartPage extends Fake implements AppPage {}
 
 class FakeCategoriesPage extends Fake implements AppPage {}
 
+enum _TestNestingBranch {
+  shop,
+  favorites,
+  cart,
+  categories,
+}
+
 void main() {
   test(
     'activeStackFlattened',
     () async {
-      final stack = NavigationStack([
+      final stack = NavigationStack<_TestNestingBranch>([
         AppPageNode(
           page: FakePage(),
           crossroad: NavigationCrossroad(
-            activeBranch: NestingBranch.cart,
+            activeBranch: _TestNestingBranch.cart,
             availableBranches: {
-              NestingBranch.shop: NavigationStack(
+              _TestNestingBranch.shop: NavigationStack(
                 [AppPageNode(page: FakePage())],
               ),
-              NestingBranch.cart: NavigationStack(
+              _TestNestingBranch.cart: NavigationStack(
                 [
                   AppPageNode(
                     page: FakeCartPage(),
                     crossroad: NavigationCrossroad(
-                      activeBranch: NestingBranch.favorites,
+                      activeBranch: _TestNestingBranch.favorites,
                       availableBranches: {
-                        NestingBranch.favorites: NavigationStack(
+                        _TestNestingBranch.favorites: NavigationStack(
                           [
                             AppPageNode(page: FakeFavoritesPage()),
                           ],
@@ -41,16 +48,17 @@ void main() {
                   AppPageNode(
                     page: FakeCartPage(),
                     crossroad: NavigationCrossroad(
-                      activeBranch: NestingBranch.favorites,
+                      activeBranch: _TestNestingBranch.favorites,
                       availableBranches: {
-                        NestingBranch.favorites: NavigationStack(
+                        _TestNestingBranch.favorites: NavigationStack(
                           [
                             AppPageNode(
                               page: FakeFavoritesPage(),
                               crossroad: NavigationCrossroad(
-                                activeBranch: NestingBranch.categories,
+                                activeBranch: _TestNestingBranch.categories,
                                 availableBranches: {
-                                  NestingBranch.categories: NavigationStack(
+                                  _TestNestingBranch.categories:
+                                      NavigationStack(
                                     [
                                       AppPageNode(page: FakeCategoriesPage()),
                                     ],
@@ -87,7 +95,8 @@ void main() {
   test(
     'activeStackFlattened with single page in stack',
     () async {
-      final stack = NavigationStack([AppPageNode(page: FakePage())]);
+      final stack =
+          NavigationStack<_TestNestingBranch>([AppPageNode(page: FakePage())]);
 
       expect(stack.activeStackFlattened().map((e) => e.runtimeType).toList(),
           [FakePage]);
@@ -100,19 +109,19 @@ void main() {
   //     var node = AppPageNode(
   //       page: FakePage(),
   //       crossroad: NavigationCrossroad(
-  //         activeBranch: NestingBranch.cart,
+  //         activeBranch: _TestNestingBranch.cart,
   //         availableBranches: {
-  //           NestingBranch.shop:
+  //           _TestNestingBranch.shop:
   //               NavigationStack([AppPageNode(page: FakePage())]),
-  //           NestingBranch.cart: NavigationStack(
+  //           _TestNestingBranch.cart: NavigationStack(
   //             [
   //               AppPageNode(page: FakePage()),
   //               AppPageNode(
   //                 page: FakePage(),
   //                 crossroad: NavigationCrossroad(
-  //                   activeBranch: NestingBranch.favorites,
+  //                   activeBranch: _TestNestingBranch.favorites,
   //                   availableBranches: {
-  //                     NestingBranch.favorites: NavigationStack([
+  //                     _TestNestingBranch.favorites: NavigationStack([
   //                       AppPageNode(page: FakePage()),
   //                     ])
   //                   },

@@ -8,13 +8,13 @@ class AppPageNodesStackUtil {
 
   /// Fills all the missing nested branches to defaults.
   /// Missing depending on the routes.
-  static NavigationStack fillMissingNestedBranches(
-    NavigationStack stack,
-    Map<String, RouteNode> routes,
+  static NavigationStack<T> fillMissingNestedBranches<T>(
+    NavigationStack<T> stack,
+    Map<String, RouteNode<T>> routes,
   ) {
-    AppPageNode _fillMissing(
-      AppPageNode pageNode,
-      RouteNode routeNode,
+    AppPageNode<T> _fillMissing(
+      AppPageNode<T> pageNode,
+      RouteNode<T> routeNode,
     ) {
       if (routeNode.nestedBranches != null) {
         if (pageNode.crossroad == null) {
@@ -100,9 +100,9 @@ class AppPageNodesStackUtil {
     );
   }
 
-  static RouteNode _findRouteNodeByStack(
-    Map<String, RouteNode> routes,
-    List<AppPageNode> stack,
+  static RouteNode<T> _findRouteNodeByStack<T>(
+    Map<String, RouteNode<T>> routes,
+    List<AppPageNode<T>> stack,
   ) {
     if (stack.isEmpty) {
       throw NavigationStackError('Empty stack has no route node.');
@@ -123,20 +123,20 @@ class AppPageNodesStackUtil {
   /// and updates it by the [onUpdateCrossroad] function.
   ///
   /// NOTICE: searches only through the active stacks recursively.
-  static NavigationStack updateNestedStack(
+  static NavigationStack<T> updateNestedStack<T>(
     Key key,
-    NavigationStack rootStack,
-    NavigationCrossroad Function(NavigationCrossroad previousCrossroad)
+    NavigationStack<T> rootStack,
+    NavigationCrossroad<T> Function(NavigationCrossroad<T> previousCrossroad)
         onUpdateCrossroad,
   ) {
     /// Creates a new instance of [NavigationStack] with replaced [NavigationCrossroad]
     /// belonging to the [navKey] in the stack.
-    NavigationStack _replaceCrossroadByKey(
-      NavigationCrossroad crossroad,
+    NavigationStack<T> _replaceCrossroadByKey(
+      NavigationCrossroad<T> crossroad,
       Key navKey,
     ) {
-      Iterable<AppPageNode> _internalReplace(
-          List<AppPageNode> stackPages) sync* {
+      Iterable<AppPageNode<T>> _internalReplace(
+          List<AppPageNode<T>> stackPages) sync* {
         for (var i = 0; i < stackPages.length; i++) {
           if (stackPages[i].crossroad == null) {
             yield stackPages[i];
@@ -168,7 +168,7 @@ class AppPageNodesStackUtil {
           _internalReplace(rootStack.pageNodesStack).toList());
     }
 
-    final crossroad = findCrossroadInActiveStackByKey(key, rootStack);
+    final crossroad = findCrossroadInActiveStackByKey<T>(key, rootStack);
 
     assert(() {
       if (crossroad == null) {
@@ -186,11 +186,11 @@ class AppPageNodesStackUtil {
 
   /// Look in all the branches and search
   /// in the [NavigationCrossroad.navigatorKeys], too.
-  static NavigationCrossroad? findCrossroadInActiveStackByKey(
+  static NavigationCrossroad<T>? findCrossroadInActiveStackByKey<T>(
     Key navKey,
-    NavigationStack fromStack,
+    NavigationStack<T> fromStack,
   ) {
-    NavigationCrossroad? _internalFind(List<AppPageNode> stack) {
+    NavigationCrossroad<T>? _internalFind(List<AppPageNode<T>> stack) {
       for (var i = 0; i < stack.length; i++) {
         if (stack[i].crossroad == null) continue;
 

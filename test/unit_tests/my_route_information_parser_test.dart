@@ -8,14 +8,21 @@ import 'package:routeborn/src/routeborn_route_info_parser.dart';
 
 import '../matchers/app_pages_matcher.dart';
 
+enum _TestNestingBranch {
+  shop,
+  favorites,
+  cart,
+  categories,
+}
+
 void main() {
-  final routes = <String, RouteNode>{
+  final routes = <String, RouteNode<_TestNestingBranch>>{
     EPage.pageKey: RouteNode(
       Right(() => EPage()),
-      routes: <String, RouteNode>{
+      routes: {
         BPage.pageKey: RouteNode(
           Left(BPage.fromPathParams),
-          routes: <String, RouteNode>{
+          routes: {
             APage.pageKey: RouteNode(Right(() => APage())),
             BPage.pageKey: RouteNode(
               Left(BPage.fromPathParams),
@@ -24,7 +31,7 @@ void main() {
         ),
         CPage.pageKey: RouteNode(
           Left(CPage.fromPathParams),
-          routes: <String, RouteNode>{
+          routes: {
             APage.pageKey: RouteNode(Right(() => APage())),
             BPage.pageKey: RouteNode(
               Left(BPage.fromPathParams),
@@ -36,16 +43,16 @@ void main() {
     APage.pageKey: RouteNode(
       Right(() => APage()),
       nestedBranches: NestedBranches(
-        defaultBranch: NestingBranch.shop,
+        defaultBranch: _TestNestingBranch.shop,
         branches: {
-          NestingBranch.shop: BranchInitNode(
+          _TestNestingBranch.shop: BranchInitNode(
             APage.pageKey,
             RouteNode(
               Right(() => APage()),
               nestedBranches: NestedBranches(
-                defaultBranch: NestingBranch.categories,
+                defaultBranch: _TestNestingBranch.categories,
                 branches: {
-                  NestingBranch.categories: BranchInitNode(
+                  _TestNestingBranch.categories: BranchInitNode(
                     APage.pageKey,
                     RouteNode(Right(() => APage())),
                   )
@@ -58,13 +65,13 @@ void main() {
               },
             ),
           ),
-          NestingBranch.favorites: BranchInitNode(
+          _TestNestingBranch.favorites: BranchInitNode(
             FPage.pageKey,
             RouteNode(
               Right(() => FPage()),
             ),
           ),
-          NestingBranch.cart: BranchInitNode(
+          _TestNestingBranch.cart: BranchInitNode(
             EPage.pageKey,
             RouteNode(
               Right(() => EPage()),
@@ -75,10 +82,10 @@ void main() {
           ),
         },
       ),
-      routes: <String, RouteNode>{
+      routes: {
         BPage.pageKey: RouteNode(
           Left(BPage.fromPathParams),
-          routes: <String, RouteNode>{
+          routes: {
             APage.pageKey: RouteNode(Right(() => APage())),
             BPage.pageKey: RouteNode(
               Left(BPage.fromPathParams),
@@ -87,7 +94,7 @@ void main() {
         ),
         CPage.pageKey: RouteNode(
           Left(CPage.fromPathParams),
-          routes: <String, RouteNode>{
+          routes: {
             APage.pageKey: RouteNode(Right(() => APage())),
             BPage.pageKey: RouteNode(
               Left(BPage.fromPathParams),
@@ -98,8 +105,8 @@ void main() {
     ),
   };
 
-  Future<PagesConfiguration> routeInfo(String route) {
-    return MyRouteInformationParser(
+  Future<PagesConfiguration<_TestNestingBranch>> routeInfo(String route) {
+    return MyRouteInformationParser<_TestNestingBranch>(
       routes: routes,
       initialStackBuilder: () => NavigationStack([AppPageNode(page: EPage())]),
       page404: TestPage404(),
@@ -118,7 +125,7 @@ void main() {
             await routeInfo(
                     'http://localhost/${EPage.pageKey}/${BPage.pageKey}/5')
                 .then((value) => value.pagesStack),
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(EPage, null),
               TestNode(BPage, null),
             ]),
@@ -133,7 +140,7 @@ void main() {
             await routeInfo(
                     'http://localhost/${EPage.pageKey}/${BPage.pageKey}')
                 .then((value) => value.pagesStack),
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(TestPage404, null),
             ]),
           );
@@ -147,7 +154,7 @@ void main() {
             await routeInfo(
                     'http://localhost/${EPage.pageKey}/${BPage.pageKey}/5/${BPage.pageKey}/2')
                 .then((value) => value.pagesStack),
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(EPage, null),
               TestNode(BPage, null),
               TestNode(BPage, null)
@@ -163,7 +170,7 @@ void main() {
             await routeInfo(
                     'http://localhost/${EPage.pageKey}/${CPage.pageKey}/5/${BPage.pageKey}/2')
                 .then((value) => value.pagesStack),
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(TestPage404, null),
             ]),
           );
@@ -177,7 +184,7 @@ void main() {
             await routeInfo(
                     'http://localhost/${EPage.pageKey}/${CPage.pageKey}/5/2/${BPage.pageKey}/2')
                 .then((value) => value.pagesStack),
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(EPage, null),
               TestNode(CPage, null),
               TestNode(BPage, null),
@@ -193,7 +200,7 @@ void main() {
             await routeInfo(
                     'http://localhost/${EPage.pageKey}/${CPage.pageKey}/5/2/${BPage.pageKey}/2/${APage.pageKey}')
                 .then((value) => value.pagesStack),
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(TestPage404, null),
             ]),
           );
@@ -206,7 +213,7 @@ void main() {
           expect(
             await routeInfo('http://localhost/${EPage.pageKey}/')
                 .then((value) => value.pagesStack),
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(EPage, null),
             ]),
           );
@@ -231,29 +238,29 @@ void main() {
 
           expect(
             pagesConfig.pagesStack,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 APage,
                 TestCrossroad(
-                  NestingBranch.cart,
+                  _TestNestingBranch.cart,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       // TestNode(
                       //   APage,
                       //   TestCrossroad(
-                      //     NestingBranch.categories,
+                      //     _TestNestingBranch.categories,
                       //     {
-                      //       NestingBranch.categories: [
+                      //       _TestNestingBranch.categories: [
                       //         TestNode(APage, null),
                       //       ],
                       //     },
                       //   ),
                       // ),
                     ],
-                    NestingBranch.favorites: [
+                    _TestNestingBranch.favorites: [
                       // TestNode(FPage, null),
                     ],
-                    NestingBranch.cart: [
+                    _TestNestingBranch.cart: [
                       TestNode(EPage, null),
                     ]
                   },
@@ -277,7 +284,7 @@ void main() {
 
           expect(
             pagesConfig.pagesStack,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(TestPage404, null),
             ]),
           );
@@ -297,29 +304,29 @@ void main() {
 
           expect(
             pagesConfig.pagesStack,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 APage,
                 TestCrossroad(
-                  NestingBranch.cart,
+                  _TestNestingBranch.cart,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       // TestNode(
                       //   APage,
                       //   TestCrossroad(
-                      //     NestingBranch.categories,
+                      //     _TestNestingBranch.categories,
                       //     {
-                      //       NestingBranch.categories: [
+                      //       _TestNestingBranch.categories: [
                       //         TestNode(APage, null),
                       //       ],
                       //     },
                       //   ),
                       // ),
                     ],
-                    NestingBranch.favorites: [
+                    _TestNestingBranch.favorites: [
                       // TestNode(FPage, null),
                     ],
-                    NestingBranch.cart: [
+                    _TestNestingBranch.cart: [
                       TestNode(EPage, null),
                     ]
                   },
@@ -344,29 +351,29 @@ void main() {
 
           expect(
             pagesConfig.pagesStack,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 APage,
                 TestCrossroad(
-                  NestingBranch.favorites,
+                  _TestNestingBranch.favorites,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       // TestNode(
                       //   APage,
                       //   TestCrossroad(
-                      //     NestingBranch.categories,
+                      //     _TestNestingBranch.categories,
                       //     {
-                      //       NestingBranch.categories: [
+                      //       _TestNestingBranch.categories: [
                       //         TestNode(APage, null),
                       //       ],
                       //     },
                       //   ),
                       // ),
                     ],
-                    NestingBranch.favorites: [
+                    _TestNestingBranch.favorites: [
                       TestNode(FPage, null),
                     ],
-                    NestingBranch.cart: [
+                    _TestNestingBranch.cart: [
                       // TestNode(EPage, null),
                     ]
                   },
@@ -391,29 +398,29 @@ void main() {
 
           expect(
             pagesConfig.pagesStack,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 APage,
                 TestCrossroad(
-                  NestingBranch.cart,
+                  _TestNestingBranch.cart,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       // TestNode(
                       //   APage,
                       // TestCrossroad(
-                      //   NestingBranch.categories,
+                      //   _TestNestingBranch.categories,
                       //   {
-                      //     NestingBranch.categories: [
+                      //     _TestNestingBranch.categories: [
                       //       TestNode(APage, null),
                       //     ],
                       //   },
                       // ),
                       // ),
                     ],
-                    NestingBranch.favorites: [
+                    _TestNestingBranch.favorites: [
                       // TestNode(FPage, null),
                     ],
-                    NestingBranch.cart: [
+                    _TestNestingBranch.cart: [
                       TestNode(EPage, null),
                       TestNode(APage, null),
                     ]
@@ -444,25 +451,25 @@ void main() {
       //       TestNode(
       //         APage,
       //         TestCrossroad(
-      //           NestingBranch.shop,
+      //           _TestNestingBranch.shop,
       //           {
-      //             NestingBranch.shop: [
+      //             _TestNestingBranch.shop: [
       //               TestNode(
       //                 APage,
       //                 TestCrossroad(
-      //                   NestingBranch.categories,
+      //                   _TestNestingBranch.categories,
       //                   {
-      //                     NestingBranch.categories: [
+      //                     _TestNestingBranch.categories: [
       //                       TestNode(APage, null),
       //                     ],
       //                   },
       //                 ),
       //               ),
       //             ],
-      //             NestingBranch.favorites: [
+      //             _TestNestingBranch.favorites: [
       //               TestNode(FPage, null),
       //             ],
-      //             NestingBranch.cart: [
+      //             _TestNestingBranch.cart: [
       //               TestNode(EPage, null),
       //             ]
       //           },
@@ -489,13 +496,13 @@ void main() {
       //         TestNode(
       //           APage,
       //           TestCrossroad(
-      //             NestingBranch.shop,
+      //             _TestNestingBranch.shop,
       //             {
-      //               NestingBranch.shop: [
+      //               _TestNestingBranch.shop: [
       //                 TestNode(APage, null),
       //                 TestNode(DPage, null),
       //               ],
-      //               NestingBranch.favorites: [],
+      //               _TestNestingBranch.favorites: [],
       //             },
       //           ),
       //         ),
@@ -522,15 +529,15 @@ void main() {
       //         TestNode(
       //           APage,
       //           TestCrossroad(
-      //             NestingBranch.shop,
+      //             _TestNestingBranch.shop,
       //             {
-      //               NestingBranch.shop: [
+      //               _TestNestingBranch.shop: [
       //                 TestNode(
       //                   APage,
       //                   TestCrossroad(
-      //                     NestingBranch.categories,
+      //                     _TestNestingBranch.categories,
       //                     {
-      //                       NestingBranch.categories: [
+      //                       _TestNestingBranch.categories: [
       //                         TestNode(APage, null),
       //                       ],
       //                     },
@@ -538,7 +545,7 @@ void main() {
       //                 ),
       //                 TestNode(DPage, null),
       //               ],
-      //               NestingBranch.favorites: [],
+      //               _TestNestingBranch.favorites: [],
       //             },
       //           ),
       //         ),

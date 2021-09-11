@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:routeborn/src/navigation_notifier.dart';
 import 'package:routeborn/src/pages_configuration.dart';
 
-class RoutebornRootRouterDelegate extends RouterDelegate<PagesConfiguration>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<PagesConfiguration> {
+class RoutebornRootRouterDelegate<T>
+    extends RouterDelegate<PagesConfiguration<T>>
+    with
+        ChangeNotifier,
+        PopNavigatorRouterDelegateMixin<PagesConfiguration<T>> {
   @override
   GlobalKey<NavigatorState> navigatorKey;
 
-  final NavigationNotifier navigationNotifier;
+  final NavigationNotifier<T> navigationNotifier;
   final List<NavigatorObserver> observers;
 
   @override
-  PagesConfiguration get currentConfiguration =>
+  PagesConfiguration<T> get currentConfiguration =>
       PagesConfiguration(pagesStack: navigationNotifier.rootPageNodes);
 
   RoutebornRootRouterDelegate(
@@ -69,7 +72,7 @@ class RoutebornRootRouterDelegate extends RouterDelegate<PagesConfiguration>
   }
 
   @override
-  Future<void> setNewRoutePath(PagesConfiguration configuration) {
+  Future<void> setNewRoutePath(PagesConfiguration<T> configuration) {
     return SynchronousFuture(
       navigationNotifier
           .replaceRootStackWith(configuration.pagesStack.pageNodesStack),

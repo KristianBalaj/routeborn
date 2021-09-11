@@ -12,17 +12,24 @@ import 'package:routeborn/src/router_delegates/routeborn_root_router_delegate.da
 
 import '../matchers/app_pages_matcher.dart';
 
-final navigationProvider =
-    Provider<NavigationNotifier>((_) => throw UnimplementedError());
+final navigationProvider = Provider<NavigationNotifier<_TestNestingBranch>>(
+    (_) => throw UnimplementedError());
+
+enum _TestNestingBranch {
+  shop,
+  favorites,
+  cart,
+  categories,
+}
 
 void main() {
-  final routes = <String, RouteNode>{
+  final routes = <String, RouteNode<_TestNestingBranch>>{
     APage.pageKey: RouteNode(
       Right(() => APage()),
-      routes: <String, RouteNode>{
+      routes: {
         BPage.pageKey: RouteNode(
           Right(() => BPage()),
-          routes: <String, RouteNode>{
+          routes: {
             CPage.pageKey: RouteNode(Right(() => CPage())),
           },
         ),
@@ -31,16 +38,16 @@ void main() {
     DPage.pageKey: RouteNode(
       Right(() => DPage()),
       nestedBranches: NestedBranches(
-        defaultBranch: NestingBranch.shop,
+        defaultBranch: _TestNestingBranch.shop,
         branches: {
-          NestingBranch.shop: BranchInitNode(
+          _TestNestingBranch.shop: BranchInitNode(
             EPage.pageKey,
             RouteNode(
               Right(() => EPage()),
               nestedBranches: NestedBranches(
-                defaultBranch: NestingBranch.categories,
+                defaultBranch: _TestNestingBranch.categories,
                 branches: {
-                  NestingBranch.categories: BranchInitNode(
+                  _TestNestingBranch.categories: BranchInitNode(
                     FPage.pageKey,
                     RouteNode(Right(() => FPage())),
                   )
@@ -56,13 +63,13 @@ void main() {
               },
             ),
           ),
-          NestingBranch.favorites: BranchInitNode(
+          _TestNestingBranch.favorites: BranchInitNode(
             HPage.pageKey,
             RouteNode(
               Right(() => HPage()),
             ),
           ),
-          NestingBranch.cart: BranchInitNode(
+          _TestNestingBranch.cart: BranchInitNode(
             IPage.pageKey,
             RouteNode(
               Right(() => IPage()),
@@ -77,9 +84,9 @@ void main() {
     KPage.pageKey: RouteNode(
       Right(() => KPage()),
       nestedBranches: NestedBranches(
-        defaultBranch: NestingBranch.shop,
+        defaultBranch: _TestNestingBranch.shop,
         branches: {
-          NestingBranch.shop: BranchInitNode(
+          _TestNestingBranch.shop: BranchInitNode(
             LPage.pageKey,
             RouteNode(
               Right(() => LPage()),
@@ -89,7 +96,7 @@ void main() {
               },
             ),
           ),
-          NestingBranch.favorites:
+          _TestNestingBranch.favorites:
               BranchInitNode(MPage.pageKey, RouteNode(Right(() => MPage())))
         },
       ),
@@ -109,7 +116,8 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: APage())]),
@@ -126,7 +134,7 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(APage, null),
               TestNode(BPage, null),
             ]),
@@ -137,7 +145,7 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(APage, null),
               TestNode(BPage, null),
               TestNode(CPage, null),
@@ -157,7 +165,8 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: DPage())]),
@@ -175,26 +184,28 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(
                         EPage,
                         TestCrossroad(
-                          NestingBranch.categories,
+                          _TestNestingBranch.categories,
                           {
-                            NestingBranch.categories: [TestNode(FPage, null)]
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
                           },
                         ),
                       ),
                       TestNode(GPage, null)
                     ],
-                    NestingBranch.favorites: [TestNode(HPage, null)],
-                    NestingBranch.cart: [TestNode(IPage, null)]
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
                   },
                 ),
               ),
@@ -212,7 +223,8 @@ void main() {
               overrides: [navigationProvider.overrideWithValue(navNotifier)],
             ),
             child: MaterialApp.router(
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: DPage())]),
@@ -230,26 +242,26 @@ void main() {
 
         expect(
           navNotifier.rootPageNodes,
-          appPageNodesStackEquals([
+          appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
               TestCrossroad(
-                NestingBranch.shop,
+                _TestNestingBranch.shop,
                 {
-                  NestingBranch.shop: [
+                  _TestNestingBranch.shop: [
                     TestNode(
                       EPage,
                       TestCrossroad(
-                        NestingBranch.categories,
+                        _TestNestingBranch.categories,
                         {
-                          NestingBranch.categories: [TestNode(FPage, null)]
+                          _TestNestingBranch.categories: [TestNode(FPage, null)]
                         },
                       ),
                     ),
                     TestNode(GPage, null)
                   ],
-                  NestingBranch.favorites: [TestNode(HPage, null)],
-                  NestingBranch.cart: [TestNode(IPage, null)]
+                  _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                  _TestNestingBranch.cart: [TestNode(IPage, null)]
                 },
               ),
             ),
@@ -269,7 +281,8 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: KPage())]),
@@ -287,17 +300,17 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(LPage, null),
                       TestNode(NPage, null)
                     ],
-                    NestingBranch.favorites: [TestNode(MPage, null)],
+                    _TestNestingBranch.favorites: [TestNode(MPage, null)],
                   },
                 ),
               ),
@@ -319,7 +332,8 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: DPage())]),
@@ -337,25 +351,27 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
                 TestCrossroad(
-                  NestingBranch.favorites,
+                  _TestNestingBranch.favorites,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(
                         EPage,
                         TestCrossroad(
-                          NestingBranch.categories,
+                          _TestNestingBranch.categories,
                           {
-                            NestingBranch.categories: [TestNode(FPage, null)]
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
                           },
                         ),
                       )
                     ],
-                    NestingBranch.favorites: [TestNode(HPage, null)],
-                    NestingBranch.cart: [TestNode(IPage, null)]
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
                   },
                 ),
               ),
@@ -375,16 +391,17 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack(
                     [
                       AppPageNode(
                           page: DPage(),
                           crossroad: NavigationCrossroad(
-                              activeBranch: NestingBranch.shop,
+                              activeBranch: _TestNestingBranch.shop,
                               availableBranches: {
-                                NestingBranch.shop: NavigationStack(
+                                _TestNestingBranch.shop: NavigationStack(
                                   [
                                     AppPageNode(page: EPage()),
                                     AppPageNode(page: GPage()),
@@ -403,26 +420,28 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(
                         EPage,
                         TestCrossroad(
-                          NestingBranch.categories,
+                          _TestNestingBranch.categories,
                           {
-                            NestingBranch.categories: [TestNode(FPage, null)]
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
                           },
                         ),
                       ),
                       TestNode(GPage, null)
                     ],
-                    NestingBranch.favorites: [TestNode(HPage, null)],
-                    NestingBranch.cart: [TestNode(IPage, null)]
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
                   },
                 ),
               ),
@@ -434,26 +453,28 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(
                         EPage,
                         TestCrossroad(
-                          NestingBranch.categories,
+                          _TestNestingBranch.categories,
                           {
-                            NestingBranch.categories: [TestNode(FPage, null)]
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
                           },
                         ),
                       ),
                       TestNode(JPage, null)
                     ],
-                    NestingBranch.favorites: [TestNode(HPage, null)],
-                    NestingBranch.cart: [TestNode(IPage, null)]
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
                   },
                 ),
               ),
@@ -474,15 +495,16 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack([
                     AppPageNode(
                       page: KPage(),
                       crossroad: NavigationCrossroad(
-                        activeBranch: NestingBranch.shop,
+                        activeBranch: _TestNestingBranch.shop,
                         availableBranches: {
-                          NestingBranch.shop: NavigationStack([
+                          _TestNestingBranch.shop: NavigationStack([
                             AppPageNode(page: LPage()),
                             AppPageNode(page: OPage()),
                           ])
@@ -504,17 +526,17 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(LPage, null),
                       TestNode(NPage, null)
                     ],
-                    NestingBranch.favorites: [TestNode(MPage, null)],
+                    _TestNestingBranch.favorites: [TestNode(MPage, null)],
                   },
                 ),
               ),
@@ -534,7 +556,8 @@ void main() {
               overrides: [navigationProvider.overrideWithValue(navNotifier)],
             ),
             child: MaterialApp.router(
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () => NavigationStack([
                   AppPageNode(page: APage()),
@@ -555,7 +578,7 @@ void main() {
 
         expect(
           navNotifier.rootPageNodes,
-          appPageNodesStackEquals([
+          appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(APage, null),
             TestNode(BPage, null),
           ]),
@@ -567,7 +590,7 @@ void main() {
 
         expect(
           navNotifier.rootPageNodes,
-          appPageNodesStackEquals([
+          appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(APage, null),
           ]),
         );
@@ -584,15 +607,16 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack([
                     AppPageNode(
                       page: DPage(),
                       crossroad: NavigationCrossroad(
-                        activeBranch: NestingBranch.shop,
+                        activeBranch: _TestNestingBranch.shop,
                         availableBranches: {
-                          NestingBranch.shop: NavigationStack(
+                          _TestNestingBranch.shop: NavigationStack(
                             [
                               AppPageNode(page: EPage()),
                               AppPageNode(page: GPage()),
@@ -612,26 +636,28 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(
                         EPage,
                         TestCrossroad(
-                          NestingBranch.categories,
+                          _TestNestingBranch.categories,
                           {
-                            NestingBranch.categories: [TestNode(FPage, null)]
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
                           },
                         ),
                       ),
                       TestNode(GPage, null),
                     ],
-                    NestingBranch.favorites: [TestNode(HPage, null)],
-                    NestingBranch.cart: [TestNode(IPage, null)]
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
                   },
                 ),
               ),
@@ -644,25 +670,27 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(
                         EPage,
                         TestCrossroad(
-                          NestingBranch.categories,
+                          _TestNestingBranch.categories,
                           {
-                            NestingBranch.categories: [TestNode(FPage, null)]
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
                           },
                         ),
                       ),
                     ],
-                    NestingBranch.favorites: [TestNode(HPage, null)],
-                    NestingBranch.cart: [TestNode(IPage, null)]
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
                   },
                 ),
               ),
@@ -682,7 +710,8 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: DPage())]),
@@ -714,16 +743,17 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack(
                     [
                       AppPageNode(
                         page: KPage(),
                         crossroad: NavigationCrossroad(
-                          activeBranch: NestingBranch.shop,
+                          activeBranch: _TestNestingBranch.shop,
                           availableBranches: {
-                            NestingBranch.shop: NavigationStack([
+                            _TestNestingBranch.shop: NavigationStack([
                               AppPageNode(page: LPage()),
                               AppPageNode(page: NPage())
                             ])
@@ -746,16 +776,16 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(LPage, null),
                     ],
-                    NestingBranch.favorites: [TestNode(MPage, null)],
+                    _TestNestingBranch.favorites: [TestNode(MPage, null)],
                   },
                 ),
               ),
@@ -777,7 +807,8 @@ void main() {
               overrides: [navigationProvider.overrideWithValue(navNotifier)],
             ),
             child: MaterialApp.router(
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),
@@ -807,15 +838,16 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack([
                     AppPageNode(
                       page: DPage(),
                       crossroad: NavigationCrossroad(
-                        activeBranch: NestingBranch.shop,
+                        activeBranch: _TestNestingBranch.shop,
                         availableBranches: {
-                          NestingBranch.shop: NavigationStack(
+                          _TestNestingBranch.shop: NavigationStack(
                             [
                               AppPageNode(page: EPage()),
                               AppPageNode(page: GPage()),
@@ -845,26 +877,28 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
                 TestCrossroad(
-                  NestingBranch.favorites,
+                  _TestNestingBranch.favorites,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(
                         EPage,
                         TestCrossroad(
-                          NestingBranch.categories,
+                          _TestNestingBranch.categories,
                           {
-                            NestingBranch.categories: [TestNode(FPage, null)]
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
                           },
                         ),
                       ),
                       TestNode(GPage, null)
                     ],
-                    NestingBranch.favorites: [TestNode(HPage, null)],
-                    NestingBranch.cart: [TestNode(IPage, null)]
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
                   },
                 ),
               ),
@@ -884,7 +918,8 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: DPage())]),
@@ -908,25 +943,27 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
                 TestCrossroad(
-                  NestingBranch.favorites,
+                  _TestNestingBranch.favorites,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(
                         EPage,
                         TestCrossroad(
-                          NestingBranch.categories,
+                          _TestNestingBranch.categories,
                           {
-                            NestingBranch.categories: [TestNode(FPage, null)]
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
                           },
                         ),
                       ),
                     ],
-                    NestingBranch.favorites: [TestNode(HPage, null)],
-                    NestingBranch.cart: [TestNode(IPage, null)]
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
                   },
                 ),
               ),
@@ -946,7 +983,8 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: KPage())]),
@@ -960,14 +998,14 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [TestNode(LPage, null)],
-                    NestingBranch.favorites: [TestNode(MPage, null)],
+                    _TestNestingBranch.shop: [TestNode(LPage, null)],
+                    _TestNestingBranch.favorites: [TestNode(MPage, null)],
                   },
                 ),
               ),
@@ -979,14 +1017,14 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
                 TestCrossroad(
-                  NestingBranch.favorites,
+                  _TestNestingBranch.favorites,
                   {
-                    NestingBranch.shop: [TestNode(LPage, null)],
-                    NestingBranch.favorites: [TestNode(MPage, null)],
+                    _TestNestingBranch.shop: [TestNode(LPage, null)],
+                    _TestNestingBranch.favorites: [TestNode(MPage, null)],
                   },
                 ),
               ),
@@ -998,14 +1036,14 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [TestNode(LPage, null)],
-                    NestingBranch.favorites: [TestNode(MPage, null)],
+                    _TestNestingBranch.shop: [TestNode(LPage, null)],
+                    _TestNestingBranch.favorites: [TestNode(MPage, null)],
                   },
                 ),
               ),
@@ -1025,7 +1063,8 @@ void main() {
               overrides: [navigationProvider.overrideWithValue(navNotifier)],
             ),
             child: MaterialApp.router(
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: DPage())]),
@@ -1043,26 +1082,26 @@ void main() {
 
         expect(
           navNotifier.rootPageNodes,
-          appPageNodesStackEquals([
+          appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
               TestCrossroad(
-                NestingBranch.shop,
+                _TestNestingBranch.shop,
                 {
-                  NestingBranch.shop: [
+                  _TestNestingBranch.shop: [
                     TestNode(
                       EPage,
                       TestCrossroad(
-                        NestingBranch.categories,
+                        _TestNestingBranch.categories,
                         {
-                          NestingBranch.categories: [TestNode(FPage, null)]
+                          _TestNestingBranch.categories: [TestNode(FPage, null)]
                         },
                       ),
                     ),
                     TestNode(GPage, null),
                   ],
-                  NestingBranch.favorites: [TestNode(HPage, null)],
-                  NestingBranch.cart: [TestNode(IPage, null)]
+                  _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                  _TestNestingBranch.cart: [TestNode(IPage, null)]
                 },
               ),
             ),
@@ -1079,7 +1118,8 @@ void main() {
               overrides: [navigationProvider.overrideWithValue(navNotifier)],
             ),
             child: MaterialApp.router(
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),
@@ -1097,25 +1137,25 @@ void main() {
 
         expect(
           navNotifier.rootPageNodes,
-          appPageNodesStackEquals([
+          appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
               TestCrossroad(
-                NestingBranch.shop,
+                _TestNestingBranch.shop,
                 {
-                  NestingBranch.shop: [
+                  _TestNestingBranch.shop: [
                     TestNode(
                       EPage,
                       TestCrossroad(
-                        NestingBranch.categories,
+                        _TestNestingBranch.categories,
                         {
-                          NestingBranch.categories: [TestNode(FPage, null)]
+                          _TestNestingBranch.categories: [TestNode(FPage, null)]
                         },
                       ),
                     ),
                   ],
-                  NestingBranch.favorites: [TestNode(HPage, null)],
-                  NestingBranch.cart: [TestNode(IPage, null)]
+                  _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                  _TestNestingBranch.cart: [TestNode(IPage, null)]
                 },
               ),
             ),
@@ -1134,7 +1174,8 @@ void main() {
                 overrides: [navigationProvider.overrideWithValue(navNotifier)],
               ),
               child: MaterialApp.router(
-                routeInformationParser: MyRouteInformationParser(
+                routeInformationParser:
+                    MyRouteInformationParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: KPage())]),
@@ -1152,17 +1193,17 @@ void main() {
 
           expect(
             navNotifier.rootPageNodes,
-            appPageNodesStackEquals([
+            appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
                 TestCrossroad(
-                  NestingBranch.shop,
+                  _TestNestingBranch.shop,
                   {
-                    NestingBranch.shop: [
+                    _TestNestingBranch.shop: [
                       TestNode(LPage, null),
                       TestNode(NPage, null)
                     ],
-                    NestingBranch.favorites: [TestNode(MPage, null)],
+                    _TestNestingBranch.favorites: [TestNode(MPage, null)],
                   },
                 ),
               ),
@@ -1185,7 +1226,8 @@ void main() {
             overrides: [navigationProvider.overrideWithValue(navNotifier)],
           ),
           child: MaterialApp.router(
-            routeInformationParser: MyRouteInformationParser(
+            routeInformationParser:
+                MyRouteInformationParser<_TestNestingBranch>(
               routes: routes,
               initialStackBuilder: () =>
                   NavigationStack([AppPageNode(page: DPage())]),
@@ -1199,25 +1241,25 @@ void main() {
 
       expect(
         navNotifier.rootPageNodes,
-        appPageNodesStackEquals([
+        appPageNodesStackEquals<_TestNestingBranch>([
           TestNode(
             DPage,
             TestCrossroad(
-              NestingBranch.shop,
+              _TestNestingBranch.shop,
               {
-                NestingBranch.shop: [
+                _TestNestingBranch.shop: [
                   TestNode(
                     EPage,
                     TestCrossroad(
-                      NestingBranch.categories,
+                      _TestNestingBranch.categories,
                       {
-                        NestingBranch.categories: [TestNode(FPage, null)]
+                        _TestNestingBranch.categories: [TestNode(FPage, null)]
                       },
                     ),
                   )
                 ],
-                NestingBranch.favorites: [TestNode(HPage, null)],
-                NestingBranch.cart: [TestNode(IPage, null)]
+                _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                _TestNestingBranch.cart: [TestNode(IPage, null)]
               },
             ),
           ),
@@ -1237,15 +1279,16 @@ void main() {
               overrides: [navigationProvider.overrideWithValue(navNotifier)],
             ),
             child: MaterialApp.router(
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () => NavigationStack([
                   AppPageNode(
                     page: DPage(),
                     crossroad: NavigationCrossroad(
-                      activeBranch: NestingBranch.shop,
+                      activeBranch: _TestNestingBranch.shop,
                       availableBranches: {
-                        NestingBranch.shop: NavigationStack(
+                        _TestNestingBranch.shop: NavigationStack(
                           [
                             AppPageNode(page: EPage()),
                           ],
@@ -1264,25 +1307,25 @@ void main() {
 
         expect(
           navNotifier.rootPageNodes,
-          appPageNodesStackEquals([
+          appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
               TestCrossroad(
-                NestingBranch.shop,
+                _TestNestingBranch.shop,
                 {
-                  NestingBranch.shop: [
+                  _TestNestingBranch.shop: [
                     TestNode(
                       EPage,
                       TestCrossroad(
-                        NestingBranch.categories,
+                        _TestNestingBranch.categories,
                         {
-                          NestingBranch.categories: [TestNode(FPage, null)]
+                          _TestNestingBranch.categories: [TestNode(FPage, null)]
                         },
                       ),
                     )
                   ],
-                  NestingBranch.favorites: [TestNode(HPage, null)],
-                  NestingBranch.cart: [TestNode(IPage, null)]
+                  _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                  _TestNestingBranch.cart: [TestNode(IPage, null)]
                 },
               ),
             ),
@@ -1303,15 +1346,16 @@ void main() {
               overrides: [navigationProvider.overrideWithValue(navNotifier)],
             ),
             child: MaterialApp.router(
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () => NavigationStack([
                   AppPageNode(
                     page: DPage(),
                     crossroad: NavigationCrossroad(
-                      activeBranch: NestingBranch.shop,
+                      activeBranch: _TestNestingBranch.shop,
                       availableBranches: {
-                        NestingBranch.shop: NavigationStack(
+                        _TestNestingBranch.shop: NavigationStack(
                           [],
                         ),
                       },
@@ -1328,25 +1372,25 @@ void main() {
 
         expect(
           navNotifier.rootPageNodes,
-          appPageNodesStackEquals([
+          appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
               TestCrossroad(
-                NestingBranch.shop,
+                _TestNestingBranch.shop,
                 {
-                  NestingBranch.shop: [
+                  _TestNestingBranch.shop: [
                     TestNode(
                       EPage,
                       TestCrossroad(
-                        NestingBranch.categories,
+                        _TestNestingBranch.categories,
                         {
-                          NestingBranch.categories: [TestNode(FPage, null)]
+                          _TestNestingBranch.categories: [TestNode(FPage, null)]
                         },
                       ),
                     )
                   ],
-                  NestingBranch.favorites: [TestNode(HPage, null)],
-                  NestingBranch.cart: [TestNode(IPage, null)]
+                  _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                  _TestNestingBranch.cart: [TestNode(IPage, null)]
                 },
               ),
             ),
@@ -1377,9 +1421,9 @@ void main() {
                           AppPageNode(
                             page: DPage(),
                             crossroad: NavigationCrossroad(
-                              activeBranch: NestingBranch.categories,
+                              activeBranch: _TestNestingBranch.categories,
                               availableBranches: {
-                                NestingBranch.categories: NavigationStack(
+                                _TestNestingBranch.categories: NavigationStack(
                                   [
                                     AppPageNode(page: EPage()),
                                   ],
@@ -1394,7 +1438,8 @@ void main() {
                   ],
                 );
               },
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),
@@ -1435,9 +1480,9 @@ void main() {
                           AppPageNode(
                             page: DPage(),
                             crossroad: NavigationCrossroad(
-                              activeBranch: NestingBranch.shop,
+                              activeBranch: _TestNestingBranch.shop,
                               availableBranches: {
-                                NestingBranch.shop: NavigationStack(
+                                _TestNestingBranch.shop: NavigationStack(
                                   [
                                     AppPageNode(
                                         page:
@@ -1454,7 +1499,8 @@ void main() {
                   ],
                 );
               },
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),
@@ -1495,9 +1541,9 @@ void main() {
                           AppPageNode(
                             page: APage(),
                             crossroad: NavigationCrossroad(
-                              activeBranch: NestingBranch.shop,
+                              activeBranch: _TestNestingBranch.shop,
                               availableBranches: {
-                                NestingBranch.shop: NavigationStack([]),
+                                _TestNestingBranch.shop: NavigationStack([]),
                               },
                             ),
                           )
@@ -1508,7 +1554,8 @@ void main() {
                   ],
                 );
               },
-              routeInformationParser: MyRouteInformationParser(
+              routeInformationParser:
+                  MyRouteInformationParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),
@@ -1551,7 +1598,7 @@ class APage extends AppPage {
                 child: Text('setBranch favorites from $pageKey'),
                 onPressed: () {
                   context.read(navigationProvider).setCurrentNestingBranch(
-                      context, NestingBranch.favorites);
+                      context, _TestNestingBranch.favorites);
                 },
               ),
               TextButton(
@@ -1660,7 +1707,7 @@ class DPage extends AppPage {
                           context,
                           inChildNavigator: true,
                         ),
-                    NestingBranch.favorites,
+                    _TestNestingBranch.favorites,
                   );
                 },
                 child: Text(
@@ -1673,7 +1720,7 @@ class DPage extends AppPage {
                           context,
                           inChildNavigator: true,
                         ),
-                    NestingBranch.shop,
+                    _TestNestingBranch.shop,
                   );
                 },
                 child: Text(
@@ -1683,7 +1730,7 @@ class DPage extends AppPage {
                 onPressed: () {
                   context.read(navigationProvider).setCurrentNestingBranch(
                         context,
-                        NestingBranch.favorites,
+                        _TestNestingBranch.favorites,
                         inChildNavigator: true,
                       );
                 },
@@ -1697,7 +1744,7 @@ class DPage extends AppPage {
                         AppPageNode(
                           page: DPage(),
                           crossroad: NavigationCrossroad(
-                              activeBranch: NestingBranch.favorites),
+                              activeBranch: _TestNestingBranch.favorites),
                         ),
                       );
                 },
@@ -1827,14 +1874,14 @@ class GPage extends AppPage {
                       context
                           .read(navigationProvider)
                           .getCurrentNestingBranch(context),
-                      NestingBranch.shop);
+                      _TestNestingBranch.shop);
                 },
               ),
               TextButton(
                 child: Text('setBranch favorites from $pageKey'),
                 onPressed: () {
                   context.read(navigationProvider).setCurrentNestingBranch(
-                      context, NestingBranch.favorites);
+                      context, _TestNestingBranch.favorites);
                 },
               ),
               TextButton(
@@ -1877,7 +1924,7 @@ class HPage extends AppPage {
                   context
                       .read(navigationProvider)
                       .getCurrentNestingBranch(context),
-                  NestingBranch.favorites);
+                  _TestNestingBranch.favorites);
             },
           ),
         );
@@ -1935,7 +1982,10 @@ class KPage extends AppPage {
           pageKey,
           (context) => Consumer(
             builder: (context, watch, _) {
-              final items = [NestingBranch.shop, NestingBranch.favorites];
+              final items = [
+                _TestNestingBranch.shop,
+                _TestNestingBranch.favorites
+              ];
               final currentBranch = watch(navigationProvider)
                   .getCurrentNestingBranch(context, inChildNavigator: true);
 
@@ -1963,7 +2013,7 @@ class KPage extends AppPage {
                         context
                             .read(navigationProvider)
                             .setCurrentNestingBranch(
-                                context, NestingBranch.shop,
+                                context, _TestNestingBranch.shop,
                                 inChildNavigator: true);
                       },
                     ),
@@ -1974,7 +2024,7 @@ class KPage extends AppPage {
                         context
                             .read(navigationProvider)
                             .setCurrentNestingBranch(
-                                context, NestingBranch.favorites,
+                                context, _TestNestingBranch.favorites,
                                 inChildNavigator: true);
                       },
                     )

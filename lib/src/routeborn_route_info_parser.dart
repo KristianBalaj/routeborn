@@ -10,7 +10,7 @@ typedef ParametrizedPage = Left<
 typedef NonParametrizedPage = Right<
     Tuple2<AppPage, List<String>> Function(List<String>), AppPage Function()>;
 
-class RouteNode {
+class RouteNode<T> {
   /// Builder of current node's [AppPage].
   /// The [Left] argument is path parametrized page builder and
   /// the [Right] one is the page builder without parameters.
@@ -22,7 +22,7 @@ class RouteNode {
   /// These pages fully overlap current node's page and use the same [Router].
   ///
   /// There are no following pages when [null].
-  final Map<String, RouteNode>? routes;
+  final Map<String, RouteNode<T>>? routes;
 
   /// These go always before the [routes].
   /// These are visualized using a nested [Router] inside current page.
@@ -36,20 +36,20 @@ class RouteNode {
   /// Meaning that the URL has to contain one of the nested branches
   /// with at least one page in the nested stack.
   /// This applies recursively to the nested branch nodes, too.
-  final NestedBranches? nestedBranches;
+  final NestedBranches<T>? nestedBranches;
 
   RouteNode(
     this.appPageBuilder, {
     this.routes,
     this.nestedBranches,
   }) : assert(() {
-          _checkNodeTreeDeterminism(routes, nestedBranches);
+          _checkNodeTreeDeterminism<T>(routes, nestedBranches);
           return true;
         }());
 
-  static void _checkNodeTreeDeterminism(
-    Map<String, RouteNode>? routes,
-    NestedBranches? nestedBranches,
+  static void _checkNodeTreeDeterminism<T>(
+    Map<String, RouteNode<T>>? routes,
+    NestedBranches<T>? nestedBranches,
   ) {
     const baseErrText = 'Nodes tree is non deterministic. '
         'There are the same keys in the routes and nestedBranches initial node keys. '
@@ -67,7 +67,7 @@ class RouteNode {
       }
 
       for (var e in nestedBranches.branches.values) {
-        _checkNodeTreeDeterminism(e.node.routes, e.node.nestedBranches);
+        _checkNodeTreeDeterminism<T>(e.node.routes, e.node.nestedBranches);
       }
     }
     if (routes != null) {
@@ -87,7 +87,7 @@ class RouteNode {
   }
 }
 
-class NestedBranches {
+class NestedBranches<T> {
   /// In case there is no nested branch in the path.
   /// Then the path is filled with the default branch
   /// taking the first page in the branch's stack.
@@ -95,9 +95,9 @@ class NestedBranches {
   /// NOTICE: because of this the first page in the branch stack
   /// needs to be non parametrized.
   /// The path param cannot be automatically derived.
-  final NestingBranch defaultBranch;
+  final T defaultBranch;
 
-  final Map<NestingBranch, BranchInitNode> branches;
+  final Map<T, BranchInitNode<T>> branches;
 
   NestedBranches({
     required this.branches,
@@ -114,9 +114,9 @@ class NestedBranches {
         }());
 }
 
-class BranchInitNode {
+class BranchInitNode<T> {
   final String nodePathKey;
-  final RouteNode node;
+  final RouteNode<T> node;
 
   BranchInitNode(this.nodePathKey, this.node);
 }
@@ -127,10 +127,10 @@ class _PathSegmentsWrapper {
   _PathSegmentsWrapper(this.pathSegments);
 }
 
-class MyRouteInformationParser
-    extends RouteInformationParser<PagesConfiguration> {
-  final Map<String, RouteNode> routes;
-  final NavigationStack Function() initialStackBuilder;
+class MyRouteInformationParser<T>
+    extends RouteInformationParser<PagesConfiguration<T>> {
+  final Map<String, RouteNode<T>> routes;
+  final NavigationStack<T> Function() initialStackBuilder;
 
   final AppPage page404;
 
@@ -140,8 +140,8 @@ class MyRouteInformationParser
     required this.page404,
   });
 
-  static NestingBranch? _nestedBranchFromSegment(
-    RouteNode node,
+  static T? _nestedBranchFromSegment<T>(
+    RouteNode<T> node,
     String? pathSegment,
   ) {
     final branch = node.nestedBranches?.branches.entries
@@ -151,14 +151,14 @@ class MyRouteInformationParser
     return branch.first.key;
   }
 
-  static NavigationStack _parsePathSegments(
+  static NavigationStack<T> _parsePathSegments<T>(
     List<String> segments,
-    Map<String, RouteNode> routes,
+    Map<String, RouteNode<T>> routes,
     AppPage page404,
   ) {
-    Iterable<AppPageNode> _parse(
+    Iterable<AppPageNode<T>> _parse(
       _PathSegmentsWrapper segments,
-      Map<String, RouteNode> routes, {
+      Map<String, RouteNode<T>> routes, {
       required bool isNested,
     }) sync* {
       if (segments.pathSegments.isEmpty) {
@@ -204,9 +204,9 @@ class MyRouteInformationParser
             ).toList();
 
             yield* [
-              AppPageNode(
+              AppPageNode<T>(
                 page: page,
-                crossroad: NavigationCrossroad(
+                crossroad: NavigationCrossroad<T>(
                   activeBranch: branch,
                   availableBranches: currentNode.nestedBranches!.branches.map(
                     (key, value) => MapEntry(
@@ -243,7 +243,7 @@ class MyRouteInformationParser
   }
 
   @override
-  Future<PagesConfiguration> parseRouteInformation(
+  Future<PagesConfiguration<T>> parseRouteInformation(
     RouteInformation routeInformation,
   ) {
     final uri = Uri.parse(routeInformation.location ?? '');
@@ -260,7 +260,7 @@ class MyRouteInformationParser
         stack.activeStackFlattened().any((e) => e == page404)) {
       return SynchronousFuture(
         PagesConfiguration(
-          pagesStack: NavigationStack([AppPageNode(page: page404)]),
+          pagesStack: NavigationStack<T>([AppPageNode(page: page404)]),
         ),
       );
     }
@@ -271,7 +271,8 @@ class MyRouteInformationParser
   }
 
   @override
-  RouteInformation restoreRouteInformation(PagesConfiguration configuration) {
+  RouteInformation restoreRouteInformation(
+      PagesConfiguration<T> configuration) {
     final res = configuration.appPagesStack
         .map((e) => e.getPagePath())
         .join('/')

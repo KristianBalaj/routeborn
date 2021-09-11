@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:routeborn/src/navigation_notifier.dart';
 import 'package:routeborn/src/pages_configuration.dart';
 
-class RoutebornNestedRouterDelegate extends RouterDelegate<PagesConfiguration>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<PagesConfiguration> {
+class RoutebornNestedRouterDelegate<T>
+    extends RouterDelegate<PagesConfiguration<T>>
+    with
+        ChangeNotifier,
+        PopNavigatorRouterDelegateMixin<PagesConfiguration<T>> {
   @override
   GlobalKey<NavigatorState>? navigatorKey;
 
-  final NavigationNotifier navigationNotifier;
+  final NavigationNotifier<T> navigationNotifier;
   final List<NavigatorObserver> observers;
 
   /// This is used in case this [RoutebornNestedRouterDelegate] displays only
@@ -16,7 +19,7 @@ class RoutebornNestedRouterDelegate extends RouterDelegate<PagesConfiguration>
   ///
   /// It is used to select correct [navigatorKey]
   /// from the [NavigationCrossroad.navigatorKeys].
-  final NestingBranch? branch;
+  final T? branch;
 
   RoutebornNestedRouterDelegate(
     this.navigationNotifier, {
@@ -52,7 +55,7 @@ class RoutebornNestedRouterDelegate extends RouterDelegate<PagesConfiguration>
   }
 
   @override
-  Future<void> setNewRoutePath(PagesConfiguration configuration) {
+  Future<void> setNewRoutePath(PagesConfiguration<T> configuration) {
     return SynchronousFuture(null);
   }
 }

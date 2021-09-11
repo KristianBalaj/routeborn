@@ -20,10 +20,10 @@ class NavigationStackError extends Error {
 
 typedef OnUnassignNavKeyCallback = void Function(VoidCallback);
 
-class NavigationStack {
-  final UnmodifiableListView<AppPageNode> pageNodesStack;
+class NavigationStack<T> {
+  final UnmodifiableListView<AppPageNode<T>> pageNodesStack;
 
-  NavigationStack(List<AppPageNode> pageNodesStack)
+  NavigationStack(List<AppPageNode<T>> pageNodesStack)
       : pageNodesStack = UnmodifiableListView(pageNodesStack);
 
   @override
@@ -42,22 +42,22 @@ class NavigationStack {
     );
   }
 
-  NavigationStack pushPage(AppPageNode page) {
+  NavigationStack<T> pushPage(AppPageNode<T> page) {
     return NavigationStack([...pageNodesStack, page]);
   }
 
-  NavigationStack replaceLastWith(AppPageNode page) {
+  NavigationStack<T> replaceLastWith(AppPageNode<T> page) {
     final res = [...pageNodesStack]
       ..removeLast()
       ..add(page);
     return NavigationStack(res);
   }
 
-  NavigationStack replaceAllWith(List<AppPageNode> pages) {
+  NavigationStack<T> replaceAllWith(List<AppPageNode<T>> pages) {
     return NavigationStack([...pages]);
   }
 
-  NavigationStack popPage() {
+  NavigationStack<T> popPage() {
     final res = [...pageNodesStack];
     if (res.length == 1) {
       throw NavigationStackError('Cannot pop the last page');
@@ -66,25 +66,26 @@ class NavigationStack {
   }
 }
 
-class NavigationCrossroad {
+/// Generic parameter [T] is a type for annotating nested branches.
+/// Most common type is an enum.
+class NavigationCrossroad<T> {
   /// This is used in case we want a single router covering all the branches.
   final GlobalKey<NavigatorState> navigatorKey;
 
   /// This is used when we want single router per branch.
-  late final UnmodifiableMapView<NestingBranch, GlobalKey<NavigatorState>>
-      navigatorKeys;
+  late final UnmodifiableMapView<T, GlobalKey<NavigatorState>> navigatorKeys;
 
   /// This is the currently selected branch.
-  final NestingBranch activeBranch;
-  final UnmodifiableMapView<NestingBranch, NavigationStack> availableBranches;
+  final T activeBranch;
+  final UnmodifiableMapView<T, NavigationStack<T>> availableBranches;
 
-  NavigationStack get activeBranchStack => availableBranches[activeBranch]!;
+  NavigationStack<T> get activeBranchStack => availableBranches[activeBranch]!;
 
   NavigationCrossroad({
     required this.activeBranch,
-    Map<NestingBranch, NavigationStack>? availableBranches,
+    Map<T, NavigationStack<T>>? availableBranches,
     GlobalKey<NavigatorState>? navigatorKey,
-    Map<NestingBranch, GlobalKey<NavigatorState>>? navigatorKeys,
+    Map<T, GlobalKey<NavigatorState>>? navigatorKeys,
   })  : availableBranches = UnmodifiableMapView(availableBranches ?? {}),
         navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>() {
     this.navigatorKeys = UnmodifiableMapView(
@@ -119,7 +120,7 @@ class NavigationCrossroad {
   /// Create the default navigation crossroad from [NestedBranches] defined in routes.
   /// The default is that every branch stack has the first [AppPageNode] and the
   /// active branch is based on the [NestedBranches.defaultBranch].
-  factory NavigationCrossroad.fromBranches(NestedBranches branches) {
+  factory NavigationCrossroad.fromBranches(NestedBranches<T> branches) {
     return NavigationCrossroad(
       activeBranch: branches.defaultBranch,
       availableBranches: branches.branches.map(
@@ -131,9 +132,9 @@ class NavigationCrossroad {
     );
   }
 
-  NavigationCrossroad copyWith({
-    NestingBranch? activeBranch,
-    Map<NestingBranch, NavigationStack>? availableBranches,
+  NavigationCrossroad<T> copyWith({
+    T? activeBranch,
+    Map<T, NavigationStack<T>>? availableBranches,
   }) {
     return NavigationCrossroad(
       navigatorKey: navigatorKey,
@@ -145,10 +146,10 @@ class NavigationCrossroad {
     );
   }
 
-  NavigationCrossroad copyWithActiveBranchStack(
-    NavigationStack stack,
+  NavigationCrossroad<T> copyWithActiveBranchStack(
+    NavigationStack<T> stack,
   ) {
-    final res = Map<NestingBranch, NavigationStack>.from(availableBranches);
+    final res = Map<T, NavigationStack<T>>.from(availableBranches);
     res[activeBranch] = stack;
 
     return NavigationCrossroad(
@@ -163,14 +164,14 @@ class NavigationCrossroad {
     return '{- navKey: $navigatorKey, activeBranch: $activeBranch,  availableBranches: $availableBranches -}';
   }
 
-  NavigationCrossroad pushToActiveBranch(AppPageNode page) {
+  NavigationCrossroad<T> pushToActiveBranch(AppPageNode<T> page) {
     return copyWithActiveBranchStack(activeBranchStack.pushPage(page));
   }
 }
 
-class AppPageNode {
+class AppPageNode<T> {
   final AppPage page;
-  final NavigationCrossroad? crossroad;
+  final NavigationCrossroad<T>? crossroad;
 
   AppPageNode({
     required this.page,
@@ -179,7 +180,7 @@ class AppPageNode {
 
   /// Creates [AppPageNode] from [BranchInitNode] defined in routes.
   /// Creates a [NavigationCrossroad] parameter when there are any nested routes.
-  factory AppPageNode.fromBranchInitNode(BranchInitNode initNode) {
+  factory AppPageNode.fromBranchInitNode(BranchInitNode<T> initNode) {
     return AppPageNode(
       page: initNode.node.appPageBuilder.fold(
           (l) => throw NavigationStackError(
@@ -187,7 +188,7 @@ class AppPageNode {
           (r) => r()),
       crossroad: initNode.node.nestedBranches == null
           ? null
-          : NavigationCrossroad.fromBranches(
+          : NavigationCrossroad<T>.fromBranches(
               initNode.node.nestedBranches!,
             ),
     );
@@ -205,14 +206,14 @@ class AppPageNode {
 
   /// Replaces the active pages stack on the given nesting level.
   /// [nestingLevel] of 0 is the current node's nestedNodes active stack.
-  AppPageNode copyWithNestedStack(List<AppPageNode> stack, int nestingLevel) {
+  AppPageNode<T> copyWithNestedStack(
+      List<AppPageNode<T>> stack, int nestingLevel) {
     if (crossroad == null) {
       throw Exception('This app page node is not a navigation crossroad');
     }
 
     final activeBranch = crossroad!.activeBranchStack;
-    final res =
-        Map<NestingBranch, NavigationStack>.of(crossroad!.availableBranches);
+    final res = Map<T, NavigationStack<T>>.of(crossroad!.availableBranches);
 
     if (nestingLevel == 0) {
       res[crossroad!.activeBranch] = NavigationStack(stack);
@@ -228,9 +229,9 @@ class AppPageNode {
     return copyWith(crossroad: crossroad!.copyWith(availableBranches: res));
   }
 
-  AppPageNode copyWith({
+  AppPageNode<T> copyWith({
     AppPage? page,
-    NavigationCrossroad? crossroad,
+    NavigationCrossroad<T>? crossroad,
   }) {
     return AppPageNode(
       page: page ?? this.page,
@@ -244,24 +245,14 @@ class AppPageNode {
   }
 }
 
-enum NestingBranch {
-  shop,
-  categories,
-  cart,
-  favorites,
-  orders,
-  account,
-  help,
-}
-
-class NavigationNotifier extends ChangeNotifier {
+class NavigationNotifier<T> extends ChangeNotifier {
   final GlobalKey<NavigatorState> rootNavKey;
-  NavigationStack _rootPageStack;
-  final Map<String, RouteNode> _routes;
+  NavigationStack<T> _rootPageStack;
+  final Map<String, RouteNode<T>> _routes;
 
-  NavigationStack get rootPageNodes => _rootPageStack;
+  NavigationStack<T> get rootPageNodes => _rootPageStack;
 
-  set _rootPageNodesSetter(NavigationStack newStack) {
+  set _rootPageNodesSetter(NavigationStack<T> newStack) {
     try {
       final res =
           AppPageNodesStackUtil.fillMissingNestedBranches(newStack, _routes);
@@ -282,7 +273,7 @@ class NavigationNotifier extends ChangeNotifier {
         rootNavKey = GlobalKey<NavigatorState>();
 
   /// Find the closest ancestor [AppPageNode] from the [context].
-  AppPageNode? _findAncestorPageNode(BuildContext context) {
+  AppPageNode<T>? _findAncestorPageNode(BuildContext context) {
     final page = ModalRoute.of(context)!.settings;
 
     if (page is! AppPage) {
@@ -292,7 +283,7 @@ class NavigationNotifier extends ChangeNotifier {
 
     final uniqueKeyToFind = page.uniqueKey;
 
-    AppPageNode? _internalFind(NavigationStack stack) {
+    AppPageNode<T>? _internalFind(NavigationStack<T> stack) {
       for (var i = 0; i < stack.pageNodesStack.length; i++) {
         if (stack.pageNodesStack[i].page.uniqueKey == uniqueKeyToFind) {
           return stack.pageNodesStack[i];
@@ -311,7 +302,7 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// The second return parameter is the AppPage type's name.
   /// This is purposed to be called from [NestedRouterDelegate].
-  Tuple4<GlobalKey<NavigatorState>, String, NestingBranch, List<AppPage>>
+  Tuple4<GlobalKey<NavigatorState>, String, T, List<AppPage>>
       findNestedNavKeyWithPages(
     BuildContext context, {
 
@@ -320,7 +311,7 @@ class NavigationNotifier extends ChangeNotifier {
     /// By setting this parameter you get the navigator key
     /// for the given branch from the [NavigationCrossroad.navigatorKeys].
     /// Otherwise, the [NavigationCrossroad.navigatorKey] is used.
-    NestingBranch? branch,
+    T? branch,
   }) {
     final node = _findAncestorPageNode(context);
 
@@ -357,7 +348,7 @@ class NavigationNotifier extends ChangeNotifier {
     }
   }
 
-  NestingBranch getCurrentNestingBranch(
+  T getCurrentNestingBranch(
     BuildContext context, {
     bool inChildNavigator = false,
   }) {
@@ -397,7 +388,7 @@ class NavigationNotifier extends ChangeNotifier {
   /// navigator (crossroad) of a page that is the closest ancestor of the [context].
   void setCurrentNestingBranch(
     BuildContext context,
-    NestingBranch branch, {
+    T branch, {
     bool inChildNavigator = false,
   }) {
     if (inChildNavigator) {
@@ -439,19 +430,19 @@ class NavigationNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isCurrentPage<T extends AppPage>() {
-    return <AppPage>[..._rootPageStack.activeStackFlattened()].last is T;
+  bool isCurrentPage<E extends AppPage>() {
+    return <AppPage>[..._rootPageStack.activeStackFlattened()].last is E;
   }
 
-  bool containsPage<T extends AppPage>() {
+  bool containsPage<E extends AppPage>() {
     return <AppPage>[
       ..._rootPageStack.activeStackFlattened(),
-    ].any((e) => e is T);
+    ].any((e) => e is E);
   }
 
   void pushPage(
     BuildContext context,
-    AppPageNode page, {
+    AppPageNode<T> page, {
     bool toParent = false,
   }) {
     if (toParent) {
@@ -506,13 +497,13 @@ class NavigationNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void replaceRootStackWith(List<AppPageNode> pages) {
+  void replaceRootStackWith(List<AppPageNode<T>> pages) {
     _rootPageNodesSetter = _rootPageStack.replaceAllWith(pages);
 
     notifyListeners();
   }
 
-  void replaceLastWith(BuildContext context, AppPageNode page) {
+  void replaceLastWith(BuildContext context, AppPageNode<T> page) {
     final navState = context.findAncestorStateOfType<NavigatorState>();
 
     final key = navState!.widget.key;
@@ -531,7 +522,7 @@ class NavigationNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void replaceAllWith(BuildContext context, List<AppPageNode> pages) {
+  void replaceAllWith(BuildContext context, List<AppPageNode<T>> pages) {
     final navState = context.findAncestorStateOfType<NavigatorState>();
 
     final key = navState!.widget.key;
