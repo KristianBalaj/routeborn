@@ -106,7 +106,7 @@ void main() {
   };
 
   Future<PagesConfiguration<_TestNestingBranch>> routeInfo(String route) {
-    return MyRouteInformationParser<_TestNestingBranch>(
+    return RoutebornRouteInfoParser<_TestNestingBranch>(
       routes: routes,
       initialStackBuilder: () => NavigationStack([AppPageNode(page: EPage())]),
       page404: TestPage404(),

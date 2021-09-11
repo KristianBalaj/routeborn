@@ -117,7 +117,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: APage())]),
@@ -166,7 +166,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: DPage())]),
@@ -224,7 +224,7 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: DPage())]),
@@ -282,7 +282,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: KPage())]),
@@ -333,7 +333,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: DPage())]),
@@ -392,7 +392,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack(
                     [
@@ -496,7 +496,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack([
                     AppPageNode(
@@ -557,7 +557,7 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () => NavigationStack([
                   AppPageNode(page: APage()),
@@ -608,7 +608,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack([
                     AppPageNode(
@@ -711,7 +711,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: DPage())]),
@@ -744,7 +744,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack(
                     [
@@ -808,7 +808,7 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),
@@ -839,7 +839,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () => NavigationStack([
                     AppPageNode(
@@ -919,7 +919,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: DPage())]),
@@ -984,7 +984,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: KPage())]),
@@ -1064,7 +1064,7 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: DPage())]),
@@ -1119,7 +1119,7 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),
@@ -1175,7 +1175,7 @@ void main() {
               ),
               child: MaterialApp.router(
                 routeInformationParser:
-                    MyRouteInformationParser<_TestNestingBranch>(
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
                   routes: routes,
                   initialStackBuilder: () =>
                       NavigationStack([AppPageNode(page: KPage())]),
@@ -1227,7 +1227,7 @@ void main() {
           ),
           child: MaterialApp.router(
             routeInformationParser:
-                MyRouteInformationParser<_TestNestingBranch>(
+                RoutebornRouteInfoParser<_TestNestingBranch>(
               routes: routes,
               initialStackBuilder: () =>
                   NavigationStack([AppPageNode(page: DPage())]),
@@ -1280,7 +1280,7 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () => NavigationStack([
                   AppPageNode(
@@ -1347,7 +1347,7 @@ void main() {
             ),
             child: MaterialApp.router(
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () => NavigationStack([
                   AppPageNode(
@@ -1439,7 +1439,7 @@ void main() {
                 );
               },
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),
@@ -1500,7 +1500,7 @@ void main() {
                 );
               },
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),
@@ -1555,7 +1555,7 @@ void main() {
                 );
               },
               routeInformationParser:
-                  MyRouteInformationParser<_TestNestingBranch>(
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
                 routes: routes,
                 initialStackBuilder: () =>
                     NavigationStack([AppPageNode(page: APage())]),

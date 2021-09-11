@@ -127,14 +127,14 @@ class _PathSegmentsWrapper {
   _PathSegmentsWrapper(this.pathSegments);
 }
 
-class MyRouteInformationParser<T>
+class RoutebornRouteInfoParser<T>
     extends RouteInformationParser<PagesConfiguration<T>> {
   final Map<String, RouteNode<T>> routes;
   final NavigationStack<T> Function() initialStackBuilder;
 
   final AppPage page404;
 
-  MyRouteInformationParser({
+  RoutebornRouteInfoParser({
     required this.routes,
     required this.initialStackBuilder,
     required this.page404,
