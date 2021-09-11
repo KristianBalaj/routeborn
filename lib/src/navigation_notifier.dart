@@ -18,8 +18,6 @@ class NavigationStackError extends Error {
   }
 }
 
-typedef OnUnassignNavKeyCallback = void Function(VoidCallback);
-
 class NavigationStack<T> {
   final UnmodifiableListView<AppPageNode<T>> pageNodesStack;
 
