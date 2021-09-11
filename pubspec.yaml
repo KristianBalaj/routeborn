@@ -1,6 +1,6 @@
 name: routeborn
 description: Crossplatform routing based on Navigator 2.0
-version: 0.1.0
+version: 0.2.0
 repository: https://github.com/KristianBalaj/routeborn
 
 environment:
