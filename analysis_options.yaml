@@ -17,3 +17,4 @@ linter:
     omit_local_variable_types: true
     unnecessary_await_in_return: true
     close_sinks: true
+    prefer_const_constructors: false

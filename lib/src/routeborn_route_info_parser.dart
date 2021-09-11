@@ -66,12 +66,14 @@ class RouteNode {
             'Nested branches initial node keys are duplicated: ${nestedBranches.branches.entries.map((e) => e.value.nodePathKey).toList()}');
       }
 
-      nestedBranches.branches.values.forEach((e) =>
-          _checkNodeTreeDeterminism(e.node.routes, e.node.nestedBranches));
+      for (var e in nestedBranches.branches.values) {
+        _checkNodeTreeDeterminism(e.node.routes, e.node.nestedBranches);
+      }
     }
     if (routes != null) {
-      routes.values.forEach(
-          (e) => _checkNodeTreeDeterminism(e.routes, e.nestedBranches));
+      for (var e in routes.values) {
+        _checkNodeTreeDeterminism(e.routes, e.nestedBranches);
+      }
     }
     if (nestedBranches != null && routes != null) {
       if (nestedBranches.branches.values
