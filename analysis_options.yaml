@@ -1,4 +1,19 @@
 include: package:flutter_lints/flutter.yaml
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+analyzer:
+  language:
+    strict-inference: true
+    strict-raw-types: true
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+
+linter:
+  rules:
+    prefer_final_locals: true
+    prefer_single_quotes: true
+    unawaited_futures: true
+    always_use_package_imports: true
+    omit_local_variable_types: true
+    unnecessary_await_in_return: true
+    close_sinks: true
