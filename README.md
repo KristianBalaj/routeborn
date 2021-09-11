@@ -9,6 +9,8 @@
   <a href="https://codecov.io/gh/KristianBalaj/routeborn"><img src="https://codecov.io/gh/KristianBalaj/routeborn/branch/main/graph/badge.svg?token=JG4ZV64V0I"/></a>
 </p>
 
+---
+
 - [Introduction](#introduction)
 - [Other](#other)  
 

@@ -140,7 +140,12 @@ class AppPageNodesStackUtil {
         for (var i = 0; i < stackPages.length; i++) {
           if (stackPages[i].crossroad == null) {
             yield stackPages[i];
-          } else if (stackPages[i].crossroad!.navigatorKey == navKey) {
+          } else if (stackPages[i].crossroad!.navigatorKey == navKey ||
+              stackPages[i]
+                  .crossroad!
+                  .navigatorKeys
+                  .values
+                  .any((e) => e == navKey)) {
             yield stackPages[i].copyWith(crossroad: crossroad);
           } else {
             yield stackPages[i].copyWith(
@@ -179,7 +184,8 @@ class AppPageNodesStackUtil {
     );
   }
 
-  /// Looks only to the active branches
+  /// Look in all the branches and search
+  /// in the [NavigationCrossroad.navigatorKeys], too.
   static NavigationCrossroad? findCrossroadInActiveStackByKey(
     Key navKey,
     NavigationStack fromStack,
@@ -192,8 +198,19 @@ class AppPageNodesStackUtil {
           return stack[i].crossroad!;
         }
 
-        return _internalFind(
-            stack[i].crossroad!.activeBranchStack.pageNodesStack);
+        if (stack[i]
+            .crossroad!
+            .navigatorKeys
+            .entries
+            .any((e) => e.value == navKey)) {
+          return stack[i].crossroad!;
+        }
+        for (var e in stack[i].crossroad!.availableBranches.values) {
+          final res = _internalFind(e.pageNodesStack);
+          if (res != null) {
+            return res;
+          }
+        }
       }
     }
 
