@@ -257,7 +257,9 @@ class MyRouteInformationParser<T>
     final stack = _parsePathSegments(uri.pathSegments, routes, page404);
 
     if (stack.pageNodesStack.isEmpty ||
-        stack.activeStackFlattened().any((e) => e == page404)) {
+        stack
+            .activeStackFlattened()
+            .any((e) => e.runtimeType == page404.runtimeType)) {
       return SynchronousFuture(
         PagesConfiguration(
           pagesStack: NavigationStack<T>([AppPageNode(page: page404)]),
