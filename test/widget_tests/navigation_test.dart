@@ -85,6 +85,7 @@ void main() {
               Right(() => LPage()),
               routes: {
                 NPage.pageKey: RouteNode(Right(() => NPage())),
+                OPage.pageKey: RouteNode(Right(() => OPage()))
               },
             ),
           ),
@@ -453,6 +454,67 @@ void main() {
                     ],
                     NestingBranch.favorites: [TestNode(HPage, null)],
                     NestingBranch.cart: [TestNode(IPage, null)]
+                  },
+                ),
+              ),
+            ]),
+          );
+        },
+      );
+
+      testWidgets(
+        'replaceLastWith in nested level when the branches '
+        'use separate navigator keys',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                routeInformationParser: MyRouteInformationParser(
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack([
+                    AppPageNode(
+                      page: KPage(),
+                      crossroad: NavigationCrossroad(
+                        activeBranch: NestingBranch.shop,
+                        availableBranches: {
+                          NestingBranch.shop: NavigationStack([
+                            AppPageNode(page: LPage()),
+                            AppPageNode(page: OPage()),
+                          ])
+                        },
+                      ),
+                    )
+                  ]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.widgetWithText(TextButton,
+              'replaceLastWith ${NPage.pageKey} from ${OPage.pageKey}'));
+          await tester.pumpAndSettle();
+
+          expect(
+            navNotifier.rootPageNodes,
+            appPageNodesStackEquals([
+              TestNode(
+                KPage,
+                TestCrossroad(
+                  NestingBranch.shop,
+                  {
+                    NestingBranch.shop: [
+                      TestNode(LPage, null),
+                      TestNode(NPage, null)
+                    ],
+                    NestingBranch.favorites: [TestNode(MPage, null)],
                   },
                 ),
               ),
@@ -1060,6 +1122,54 @@ void main() {
           ]),
         );
       });
+      testWidgets(
+        'replaceAllWith in nested level when the branches '
+        'use separate navigator keys',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                routeInformationParser: MyRouteInformationParser(
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: KPage())]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.widgetWithText(
+              TextButton, 'replaceAllWith from ${LPage.pageKey}'));
+          await tester.pumpAndSettle();
+
+          expect(
+            navNotifier.rootPageNodes,
+            appPageNodesStackEquals([
+              TestNode(
+                KPage,
+                TestCrossroad(
+                  NestingBranch.shop,
+                  {
+                    NestingBranch.shop: [
+                      TestNode(LPage, null),
+                      TestNode(NPage, null)
+                    ],
+                    NestingBranch.favorites: [TestNode(MPage, null)],
+                  },
+                ),
+              ),
+            ]),
+          );
+        },
+      );
     });
   });
 
@@ -1890,14 +2000,27 @@ class LPage extends AppPage {
   LPage()
       : super.builder(
           pageKey,
-          (context) => TextButton(
-            child: Text('pushPage NPage from $pageKey'),
-            onPressed: () {
-              context.read(navigationProvider).pushPage(
-                    context,
+          (context) => Column(
+            children: [
+              TextButton(
+                child: Text('pushPage NPage from $pageKey'),
+                onPressed: () {
+                  context.read(navigationProvider).pushPage(
+                        context,
+                        AppPageNode(page: NPage()),
+                      );
+                },
+              ),
+              TextButton(
+                child: Text('replaceAllWith from $pageKey'),
+                onPressed: () {
+                  context.read(navigationProvider).replaceAllWith(context, [
+                    AppPageNode(page: LPage()),
                     AppPageNode(page: NPage()),
-                  );
-            },
+                  ]);
+                },
+              ),
+            ],
           ),
         );
 
@@ -1938,6 +2061,31 @@ class NPage extends AppPage {
             child: Text('popPage from $pageKey'),
             onPressed: () {
               context.read(navigationProvider).popPage(context);
+            },
+          ),
+        );
+
+  @override
+  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+      Right(pageKey);
+  @override
+  String getPagePath() => pageKey;
+  @override
+  String getPagePathBase() => pageKey;
+}
+
+class OPage extends AppPage {
+  static const String pageKey = 'o';
+
+  OPage()
+      : super.builder(
+          pageKey,
+          (context) => TextButton(
+            child: Text('replaceLastWith ${NPage.pageKey} from $pageKey'),
+            onPressed: () {
+              context
+                  .read(navigationProvider)
+                  .replaceLastWith(context, AppPageNode(page: NPage()));
             },
           ),
         );
