@@ -1,3 +1,7 @@
+# 0.2.2
+
+- fix package exports
+
 # 0.2.1
 
 - fix package exports
