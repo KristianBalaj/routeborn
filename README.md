@@ -9,10 +9,15 @@
   <a href="https://codecov.io/gh/KristianBalaj/routeborn"><img src="https://codecov.io/gh/KristianBalaj/routeborn/branch/main/graph/badge.svg?token=JG4ZV64V0I"/></a>
 </p>
 
+
+<p align="center">  
+<a href="https://www.buymeacoffee.com/kristianbalaj" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="30px" width= "108px"></a>  
+</p>  
+
 ---
 
 - [Introduction](#introduction)
-- [Other](#other)  
+- [Other](#other)
 
 ## Introduction
 Flutter crossplatform routing based on Navigator 2.0 

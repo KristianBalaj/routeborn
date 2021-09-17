@@ -73,8 +73,8 @@ class RoutebornRootRouterDelegate<T>
 
   @override
   Future<void> setNewRoutePath(PagesConfiguration<T> configuration) {
-    return SynchronousFuture(
-      navigationNotifier
+    return Future.microtask(
+      () => navigationNotifier
           .replaceRootStackWith(configuration.pagesStack.pageNodesStack),
     );
   }
