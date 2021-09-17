@@ -1,3 +1,7 @@
+# 0.2.3
+
+- fix setting new route path
+
 # 0.2.2
 
 - fix package exports
