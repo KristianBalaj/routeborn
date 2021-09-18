@@ -1051,6 +1051,152 @@ void main() {
           );
         },
       );
+
+      testWidgets(
+        'setNestingBranch with resetStack = true.',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                routeInformationParser:
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack([
+                    AppPageNode(
+                      page: DPage(),
+                      crossroad: NavigationCrossroad(
+                        activeBranch: _TestNestingBranch.favorites,
+                        availableBranches: {
+                          _TestNestingBranch.shop: NavigationStack(
+                            [
+                              AppPageNode(page: EPage()),
+                              AppPageNode(page: GPage()),
+                            ],
+                          )
+                        },
+                      ),
+                    ),
+                  ]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.widgetWithText(TextButton,
+              'set nestingBranch of child shop with resetStack = true from ${DPage.pageKey}'));
+          await tester.pumpAndSettle();
+
+          expect(
+            navNotifier.rootPageNodes,
+            appPageNodesStackEquals<_TestNestingBranch>([
+              TestNode(
+                DPage,
+                TestCrossroad(
+                  _TestNestingBranch.shop,
+                  {
+                    _TestNestingBranch.shop: [
+                      TestNode(
+                        EPage,
+                        TestCrossroad(
+                          _TestNestingBranch.categories,
+                          {
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
+                          },
+                        ),
+                      ),
+                    ],
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
+                  },
+                ),
+              ),
+            ]),
+          );
+        },
+      );
+
+      testWidgets(
+        'setNestingBranch in child with resetStack = true.',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                routeInformationParser:
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack([
+                    AppPageNode(
+                      page: DPage(),
+                      crossroad: NavigationCrossroad(
+                        activeBranch: _TestNestingBranch.favorites,
+                        availableBranches: {
+                          _TestNestingBranch.shop: NavigationStack(
+                            [
+                              AppPageNode(page: EPage()),
+                              AppPageNode(page: GPage()),
+                            ],
+                          )
+                        },
+                      ),
+                    ),
+                  ]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.widgetWithText(TextButton,
+              'set nestingBranch of child shop with resetStack = true from ${DPage.pageKey}'));
+          await tester.pumpAndSettle();
+
+          expect(
+            navNotifier.rootPageNodes,
+            appPageNodesStackEquals<_TestNestingBranch>([
+              TestNode(
+                DPage,
+                TestCrossroad(
+                  _TestNestingBranch.shop,
+                  {
+                    _TestNestingBranch.shop: [
+                      TestNode(
+                        EPage,
+                        TestCrossroad(
+                          _TestNestingBranch.categories,
+                          {
+                            _TestNestingBranch.categories: [
+                              TestNode(FPage, null)
+                            ]
+                          },
+                        ),
+                      ),
+                    ],
+                    _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                    _TestNestingBranch.cart: [TestNode(IPage, null)]
+                  },
+                ),
+              ),
+            ]),
+          );
+        },
+      );
     });
 
     group('replaceAllWith', () {
@@ -1702,6 +1848,18 @@ class DPage extends AppPage {
             children: [
               TextButton(
                 onPressed: () {
+                  context.read(navigationProvider).setCurrentNestingBranch(
+                        context,
+                        _TestNestingBranch.shop,
+                        inChildNavigator: true,
+                        resetBranchStack: true,
+                      );
+                },
+                child: Text(
+                    'set nestingBranch of child shop with resetStack = true from ${DPage.pageKey}'),
+              ),
+              TextButton(
+                onPressed: () {
                   expect(
                     context.read(navigationProvider).getCurrentNestingBranch(
                           context,
@@ -1867,6 +2025,17 @@ class GPage extends AppPage {
           pageKey,
           (context) => Column(
             children: [
+              TextButton(
+                child: Text(
+                    'setNestingBranch to shop with resetStack = true from $pageKey'),
+                onPressed: () {
+                  context.read(navigationProvider).setCurrentNestingBranch(
+                        context,
+                        _TestNestingBranch.shop,
+                        resetBranchStack: true,
+                      );
+                },
+              ),
               TextButton(
                 child: Text('expect nestingBranch shop from $pageKey'),
                 onPressed: () {

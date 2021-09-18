@@ -133,8 +133,9 @@ class NavigationCrossroad<T> {
   NavigationCrossroad<T> copyWith({
     T? activeBranch,
     Map<T, NavigationStack<T>>? availableBranches,
+    bool resetBranch = false,
   }) {
-    return NavigationCrossroad(
+    final tmp = NavigationCrossroad(
       navigatorKey: navigatorKey,
       navigatorKeys: navigatorKeys,
       activeBranch: activeBranch ?? this.activeBranch,
@@ -142,6 +143,16 @@ class NavigationCrossroad<T> {
           ? UnmodifiableMapView(availableBranches)
           : this.availableBranches,
     );
+
+    if (resetBranch) {
+      final branches = Map<T, NavigationStack<T>>.from(tmp.availableBranches);
+
+      /// When set to empty stack, it will be automatically filled.
+      branches[tmp.activeBranch] = NavigationStack([]);
+      return tmp.copyWith(availableBranches: branches);
+    }
+
+    return tmp;
   }
 
   NavigationCrossroad<T> copyWithActiveBranchStack(
@@ -384,10 +395,15 @@ class NavigationNotifier<T> extends ChangeNotifier {
   ///
   /// Setting [inChildNavigator] to true finds the closest child
   /// navigator (crossroad) of a page that is the closest ancestor of the [context].
+  ///
+  /// To reset the stack of the branch to be set,
+  /// set the parameter [resetBranchStack] to [true].
+  /// While reset meaning to fill the stack with the initial page.
   void setCurrentNestingBranch(
     BuildContext context,
     T branch, {
     bool inChildNavigator = false,
+    bool resetBranchStack = false,
   }) {
     if (inChildNavigator) {
       final parentPageNode = _findAncestorPageNode(context);
@@ -406,7 +422,10 @@ class NavigationNotifier<T> extends ChangeNotifier {
       _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
         parentPageNode.crossroad!.navigatorKey,
         _rootPageStack,
-        (previousCrossroad) => previousCrossroad.copyWith(activeBranch: branch),
+        (previousCrossroad) => previousCrossroad.copyWith(
+          activeBranch: branch,
+          resetBranch: resetBranchStack,
+        ),
       );
     } else {
       final navState = context.findAncestorStateOfType<NavigatorState>();
@@ -419,8 +438,10 @@ class NavigationNotifier<T> extends ChangeNotifier {
         _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
           key!,
           _rootPageStack,
-          (previousCrossroad) =>
-              previousCrossroad.copyWith(activeBranch: branch),
+          (previousCrossroad) => previousCrossroad.copyWith(
+            activeBranch: branch,
+            resetBranch: resetBranchStack,
+          ),
         );
       }
     }
