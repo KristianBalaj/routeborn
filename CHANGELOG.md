@@ -1,3 +1,7 @@
+# 0.2.4
+
+- **feat**: setting nesting branch has now option to reset the stack of the given branch
+
 # 0.2.3
 
 - fix setting new route path
