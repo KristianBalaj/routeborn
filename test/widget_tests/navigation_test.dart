@@ -1358,6 +1358,115 @@ void main() {
         },
       );
     });
+
+    group('popUntil', () {
+      testWidgets('popUntil from the root stack', (tester) async {
+        final navNotifier = NavigationNotifier(routes);
+
+        await tester.pumpWidget(
+          UncontrolledProviderScope(
+            container: ProviderContainer(
+              overrides: [navigationProvider.overrideWithValue(navNotifier)],
+            ),
+            child: MaterialApp.router(
+              routeInformationParser:
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
+                routes: routes,
+                initialStackBuilder: () => NavigationStack([
+                  AppPageNode(page: APage()),
+                  AppPageNode(page: BPage()),
+                  AppPageNode(page: CPage()),
+                ]),
+                page404: TestPage404(),
+              ),
+              routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        //  'popUntil ${APage.pageKey} from ${CPage.pageKey}'
+        await tester.tap(find.widgetWithText(
+            TextButton, 'popUntil ${APage.pageKey} from ${CPage.pageKey}'));
+        await tester.pumpAndSettle();
+
+        expect(
+          navNotifier.rootPageNodes,
+          appPageNodesStackEquals<_TestNestingBranch>([
+            TestNode(APage, null),
+          ]),
+        );
+      });
+
+      testWidgets('popUntil from the nested stack', (tester) async {
+        final navNotifier = NavigationNotifier(routes);
+
+        await tester.pumpWidget(
+          UncontrolledProviderScope(
+            container: ProviderContainer(
+              overrides: [navigationProvider.overrideWithValue(navNotifier)],
+            ),
+            child: MaterialApp.router(
+              routeInformationParser:
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
+                routes: routes,
+                initialStackBuilder: () => NavigationStack([
+                  AppPageNode(
+                    page: DPage(),
+                    crossroad: NavigationCrossroad(
+                      activeBranch: _TestNestingBranch.shop,
+                      availableBranches: {
+                        _TestNestingBranch.shop: NavigationStack(
+                          [
+                            AppPageNode(page: EPage()),
+                            AppPageNode(page: GPage()),
+                          ],
+                        )
+                      },
+                    ),
+                  )
+                ]),
+                page404: TestPage404(),
+              ),
+              routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        debugDumpApp();
+        await tester.tap(find.widgetWithText(
+            TextButton, 'popUntil ${EPage.pageKey} from ${GPage.pageKey}'));
+        await tester.pumpAndSettle();
+
+        expect(
+          navNotifier.rootPageNodes,
+          appPageNodesStackEquals<_TestNestingBranch>([
+            TestNode(
+              DPage,
+              TestCrossroad(
+                _TestNestingBranch.shop,
+                {
+                  _TestNestingBranch.shop: [
+                    TestNode(
+                      EPage,
+                      TestCrossroad(
+                        _TestNestingBranch.categories,
+                        {
+                          _TestNestingBranch.categories: [TestNode(FPage, null)]
+                        },
+                      ),
+                    ),
+                  ],
+                  _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                  _TestNestingBranch.cart: [TestNode(IPage, null)]
+                },
+              ),
+            ),
+          ]),
+        );
+      });
+    });
   });
 
   group(
@@ -1812,6 +1921,14 @@ class CPage extends AppPage {
           (context) => Column(
             children: [
               TextButton(
+                child: Text('popUntil ${APage.pageKey} from ${CPage.pageKey}'),
+                onPressed: () {
+                  context
+                      .read(navigationProvider)
+                      .popUntil(context, (page) => page.runtimeType == APage);
+                },
+              ),
+              TextButton(
                 child: Text('replace all with DPage'),
                 onPressed: () {
                   context
@@ -2025,6 +2142,15 @@ class GPage extends AppPage {
           pageKey,
           (context) => Column(
             children: [
+              TextButton(
+                child: Text('popUntil ${EPage.pageKey} from ${GPage.pageKey}'),
+                onPressed: () {
+                  context.read(navigationProvider).popUntil(
+                        context,
+                        (page) => page.runtimeType == EPage,
+                      );
+                },
+              ),
               TextButton(
                 child: Text(
                     'setNestingBranch to shop with resetStack = true from $pageKey'),

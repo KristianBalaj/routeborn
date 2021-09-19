@@ -62,6 +62,15 @@ class NavigationStack<T> {
     }
     return NavigationStack(res..removeLast());
   }
+
+  NavigationStack<T> popUntil(bool Function(AppPage) predicate) {
+    final res = [...pageNodesStack];
+    return NavigationStack(res.reversed
+        .skipWhile((value) => !predicate(value.page))
+        .toList()
+        .reversed
+        .toList());
+  }
 }
 
 /// Generic parameter [T] is a type for annotating nested branches.
@@ -559,6 +568,29 @@ class NavigationNotifier<T> extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  /// Pops pages from the current stack until the predicate returns [true].
+  ///
+  void popUntil(
+    BuildContext context,
+    bool Function(AppPage page) predicate,
+  ) {
+    final navState = context.findAncestorStateOfType<NavigatorState>();
+
+    final key = navState!.widget.key;
+
+    if (key == rootNavKey) {
+      _rootPageNodesSetter = _rootPageStack.popUntil(predicate);
+    } else {
+      _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
+        key!,
+        _rootPageStack,
+        (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
+          previousCrossroad.activeBranchStack.popUntil(predicate),
+        ),
+      );
+    }
   }
 
   void reloadLast(BuildContext context) {
