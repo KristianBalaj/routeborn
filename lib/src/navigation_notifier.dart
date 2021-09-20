@@ -369,7 +369,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
     }
   }
 
-  T getCurrentNestingBranch(
+  T getNestingBranch(
     BuildContext context, {
     bool inChildNavigator = false,
   }) {
@@ -411,7 +411,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
   /// To reset the stack of the branch to be set,
   /// set the parameter [resetBranchStack] to [true].
   /// While reset meaning to fill the stack with the initial page.
-  void setCurrentNestingBranch(
+  void setNestingBranch(
     BuildContext context,
     T branch, {
     bool inChildNavigator = false,

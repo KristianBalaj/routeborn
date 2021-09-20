@@ -1490,7 +1490,6 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        debugDumpApp();
         await tester.tap(find.widgetWithText(
             TextButton, 'popUntil ${EPage.pageKey} from ${GPage.pageKey}'));
         await tester.pumpAndSettle();
@@ -1908,8 +1907,9 @@ class APage extends AppPage {
               TextButton(
                 child: Text('setBranch favorites from $pageKey'),
                 onPressed: () {
-                  context.read(navigationProvider).setCurrentNestingBranch(
-                      context, _TestNestingBranch.favorites);
+                  context
+                      .read(navigationProvider)
+                      .setNestingBranch(context, _TestNestingBranch.favorites);
                 },
               ),
               TextButton(
@@ -2035,7 +2035,7 @@ class DPage extends AppPage {
               ),
               TextButton(
                 onPressed: () {
-                  context.read(navigationProvider).setCurrentNestingBranch(
+                  context.read(navigationProvider).setNestingBranch(
                         context,
                         _TestNestingBranch.shop,
                         inChildNavigator: true,
@@ -2048,7 +2048,7 @@ class DPage extends AppPage {
               TextButton(
                 onPressed: () {
                   expect(
-                    context.read(navigationProvider).getCurrentNestingBranch(
+                    context.read(navigationProvider).getNestingBranch(
                           context,
                           inChildNavigator: true,
                         ),
@@ -2061,7 +2061,7 @@ class DPage extends AppPage {
               TextButton(
                 onPressed: () {
                   expect(
-                    context.read(navigationProvider).getCurrentNestingBranch(
+                    context.read(navigationProvider).getNestingBranch(
                           context,
                           inChildNavigator: true,
                         ),
@@ -2073,7 +2073,7 @@ class DPage extends AppPage {
               ),
               TextButton(
                 onPressed: () {
-                  context.read(navigationProvider).setCurrentNestingBranch(
+                  context.read(navigationProvider).setNestingBranch(
                         context,
                         _TestNestingBranch.favorites,
                         inChildNavigator: true,
@@ -2225,7 +2225,7 @@ class GPage extends AppPage {
                 child: Text(
                     'setNestingBranch to shop with resetStack = true from $pageKey'),
                 onPressed: () {
-                  context.read(navigationProvider).setCurrentNestingBranch(
+                  context.read(navigationProvider).setNestingBranch(
                         context,
                         _TestNestingBranch.shop,
                         resetBranchStack: true,
@@ -2238,15 +2238,16 @@ class GPage extends AppPage {
                   expect(
                       context
                           .read(navigationProvider)
-                          .getCurrentNestingBranch(context),
+                          .getNestingBranch(context),
                       _TestNestingBranch.shop);
                 },
               ),
               TextButton(
                 child: Text('setBranch favorites from $pageKey'),
                 onPressed: () {
-                  context.read(navigationProvider).setCurrentNestingBranch(
-                      context, _TestNestingBranch.favorites);
+                  context
+                      .read(navigationProvider)
+                      .setNestingBranch(context, _TestNestingBranch.favorites);
                 },
               ),
               TextButton(
@@ -2285,10 +2286,7 @@ class HPage extends AppPage {
           (context) => TextButton(
             child: Text('expect nestingBranch favorites from $pageKey'),
             onPressed: () {
-              expect(
-                  context
-                      .read(navigationProvider)
-                      .getCurrentNestingBranch(context),
+              expect(context.read(navigationProvider).getNestingBranch(context),
                   _TestNestingBranch.favorites);
             },
           ),
@@ -2352,7 +2350,7 @@ class KPage extends AppPage {
                 _TestNestingBranch.favorites
               ];
               final currentBranch = watch(navigationProvider)
-                  .getCurrentNestingBranch(context, inChildNavigator: true);
+                  .getNestingBranch(context, inChildNavigator: true);
 
               return Scaffold(
                 body: Column(
@@ -2375,22 +2373,18 @@ class KPage extends AppPage {
                     TextButton(
                       child: Text('set branch shop in child from $pageKey'),
                       onPressed: () {
-                        context
-                            .read(navigationProvider)
-                            .setCurrentNestingBranch(
-                                context, _TestNestingBranch.shop,
-                                inChildNavigator: true);
+                        context.read(navigationProvider).setNestingBranch(
+                            context, _TestNestingBranch.shop,
+                            inChildNavigator: true);
                       },
                     ),
                     TextButton(
                       child:
                           Text('set branch favorites in child from $pageKey'),
                       onPressed: () {
-                        context
-                            .read(navigationProvider)
-                            .setCurrentNestingBranch(
-                                context, _TestNestingBranch.favorites,
-                                inChildNavigator: true);
+                        context.read(navigationProvider).setNestingBranch(
+                            context, _TestNestingBranch.favorites,
+                            inChildNavigator: true);
                       },
                     )
                   ],
