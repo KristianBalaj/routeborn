@@ -1,22 +1,28 @@
+# 0.2.6
+
+- **feat:** added option `inChildNavigator` to `replaceAllWith` method
+- **BREAKING:** renamed `getCurrentNestingBranch` to `getNestingBranch`
+- **BREAKING:** renamed `setCurrentNestingBranch` to `setNestingBranch`
+
 # 0.2.5
 
-- **feat**: added popUntil method
+- **feat:** added `popUntil` method
 
 # 0.2.4
 
-- **feat**: setting nesting branch has now option to reset the stack of the given branch
+- **feat:** `setNestingBranch` has now option to reset the stack of the given branch
 
 # 0.2.3
 
-- fix setting new route path
+- **fix:** setting new route path
 
 # 0.2.2
 
-- fix package exports
+- **fix:** package exports
 
 # 0.2.1
 
-- fix package exports
+- **fix:** package exports
 
 # 0.2.0
 
