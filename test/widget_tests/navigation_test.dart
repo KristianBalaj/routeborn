@@ -1200,6 +1200,61 @@ void main() {
     });
 
     group('replaceAllWith', () {
+      testWidgets('replace all pages in child navigator', (tester) async {
+        final navNotifier = NavigationNotifier(routes);
+
+        await tester.pumpWidget(
+          UncontrolledProviderScope(
+            container: ProviderContainer(
+              overrides: [navigationProvider.overrideWithValue(navNotifier)],
+            ),
+            child: MaterialApp.router(
+              routeInformationParser:
+                  RoutebornRouteInfoParser<_TestNestingBranch>(
+                routes: routes,
+                initialStackBuilder: () =>
+                    NavigationStack([AppPageNode(page: DPage())]),
+                page404: TestPage404(),
+              ),
+              routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.widgetWithText(TextButton,
+            'replaceAllWith in child [${EPage.pageKey}, ${GPage.pageKey}] from ${DPage.pageKey}'));
+        await tester.pumpAndSettle();
+
+        expect(
+          navNotifier.rootPageNodes,
+          appPageNodesStackEquals<_TestNestingBranch>([
+            TestNode(
+              DPage,
+              TestCrossroad(
+                _TestNestingBranch.shop,
+                {
+                  _TestNestingBranch.shop: [
+                    TestNode(
+                      EPage,
+                      TestCrossroad(
+                        _TestNestingBranch.categories,
+                        {
+                          _TestNestingBranch.categories: [TestNode(FPage, null)]
+                        },
+                      ),
+                    ),
+                    TestNode(GPage, null),
+                  ],
+                  _TestNestingBranch.favorites: [TestNode(HPage, null)],
+                  _TestNestingBranch.cart: [TestNode(IPage, null)]
+                },
+              ),
+            ),
+          ]),
+        );
+      });
+
       testWidgets('replace all pages in nested stack', (tester) async {
         final navNotifier = NavigationNotifier(routes);
 
@@ -1308,6 +1363,7 @@ void main() {
           ]),
         );
       });
+
       testWidgets(
         'replaceAllWith in nested level when the branches '
         'use separate navigator keys',
@@ -1963,6 +2019,20 @@ class DPage extends AppPage {
           pageKey,
           (context) => Column(
             children: [
+              TextButton(
+                onPressed: () {
+                  context.read(navigationProvider).replaceAllWith(
+                        context,
+                        [
+                          AppPageNode(page: EPage()),
+                          AppPageNode(page: GPage())
+                        ],
+                        inChildNavigator: true,
+                      );
+                },
+                child: Text(
+                    'replaceAllWith in child [${EPage.pageKey}, ${GPage.pageKey}] from ${DPage.pageKey}'),
+              ),
               TextButton(
                 onPressed: () {
                   context.read(navigationProvider).setCurrentNestingBranch(

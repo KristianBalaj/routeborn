@@ -142,6 +142,9 @@ class NavigationCrossroad<T> {
   NavigationCrossroad<T> copyWith({
     T? activeBranch,
     Map<T, NavigationStack<T>>? availableBranches,
+
+    /// Resets the stack of the given branch.
+    /// Meaning it will be filled with default stack based on routes.
     bool resetBranch = false,
   }) {
     final tmp = NavigationCrossroad(
@@ -550,21 +553,47 @@ class NavigationNotifier<T> extends ChangeNotifier {
     notifyListeners();
   }
 
-  void replaceAllWith(BuildContext context, List<AppPageNode<T>> pages) {
-    final navState = context.findAncestorStateOfType<NavigatorState>();
+  void replaceAllWith(
+    BuildContext context,
+    List<AppPageNode<T>> pages, {
+    bool inChildNavigator = false,
+  }) {
+    if (inChildNavigator) {
+      final parentPageNode = _findAncestorPageNode(context);
 
-    final key = navState!.widget.key;
+      if (parentPageNode == null) {
+        throw NavigationStackError(
+            'Could not find AppPageNode from the current route.\n'
+            'Given context Route is not in the pages stack.');
+      }
 
-    if (key == rootNavKey) {
-      _rootPageNodesSetter = _rootPageStack.replaceAllWith(pages);
-    } else {
+      if (parentPageNode.crossroad == null) {
+        throw NavigationStackError(
+            'The given context\'s page does not have nested navigation.\n');
+      }
+
       _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
-        key!,
+        parentPageNode.crossroad!.navigatorKey,
         _rootPageStack,
-        (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
-          previousCrossroad.activeBranchStack.replaceAllWith(pages),
-        ),
+        (previousCrossroad) =>
+            previousCrossroad.copyWithActiveBranchStack(NavigationStack(pages)),
       );
+    } else {
+      final navState = context.findAncestorStateOfType<NavigatorState>();
+
+      final key = navState!.widget.key;
+
+      if (key == rootNavKey) {
+        _rootPageNodesSetter = _rootPageStack.replaceAllWith(pages);
+      } else {
+        _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
+          key!,
+          _rootPageStack,
+          (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
+            previousCrossroad.activeBranchStack.replaceAllWith(pages),
+          ),
+        );
+      }
     }
 
     notifyListeners();
