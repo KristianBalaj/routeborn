@@ -62,22 +62,11 @@ abstract class AppPage extends Page<dynamic> {
   String getPagePath();
 
   @override
-  Route<dynamic> createRoute(BuildContext context) => kIsWeb
-      ? PageRouteBuilder<dynamic>(
-          settings: this,
-          pageBuilder: (context, __, ___) => _builder(context),
-        )
-      : (defaultTargetPlatform == TargetPlatform.iOS
-          ? CupertinoPageRoute<dynamic>(
-              builder: _builder,
-              settings: this,
-              // fullscreenDialog: fullScreen,
-            )
-          : MaterialPageRoute<dynamic>(
-              settings: this,
-              builder: _builder,
-              // fullscreenDialog: fullScreen,
-            ));
+  Route<dynamic> createRoute(BuildContext context) =>
+      MaterialPageRoute<dynamic>(
+        settings: this,
+        builder: _builder,
+      );
 
   @override
   String toString() {
