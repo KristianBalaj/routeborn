@@ -25,7 +25,15 @@ class RoutebornNestedRouterDelegate<T>
     this.navigationNotifier, {
     this.observers = const [],
     this.branch,
-  });
+  }) {
+    navigationNotifier.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    navigationNotifier.removeListener(notifyListeners);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +43,6 @@ class RoutebornNestedRouterDelegate<T>
     );
 
     navigatorKey = res.value1;
-
     // _logger.info(
     //     'Nested router of page [${res.value2}] for branch [${res.value3}] pages stack: ${res.value4}');
 
