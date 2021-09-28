@@ -622,8 +622,4 @@ class NavigationNotifier<T> extends ChangeNotifier {
       );
     }
   }
-
-  void reloadLast(BuildContext context) {
-    throw UnimplementedError();
-  }
 }
