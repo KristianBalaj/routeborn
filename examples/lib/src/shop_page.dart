@@ -7,7 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:routeborn/routeborn.dart';
 
-class ShopPage extends AppPage {
+class ShopPage extends RoutebornPage {
   static const pagePathBase = 'shop';
 
   ShopPage() : super.builder(pagePathBase, (_) => ShopPageView());

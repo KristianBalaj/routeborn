@@ -5,7 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:routeborn/routeborn.dart';
 
-class ProductDetailPage extends AppPage {
+class ProductDetailPage extends RoutebornPage {
   static const pagePathBase = 'product_detail';
 
   ProductDetailPage()

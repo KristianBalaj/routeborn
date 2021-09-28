@@ -5,7 +5,7 @@ import 'package:routeborn/routeborn.dart';
 
 import '../main.dart';
 
-class HelpPage extends AppPage {
+class HelpPage extends RoutebornPage {
   static const pagePathBase = 'help';
 
   HelpPage()

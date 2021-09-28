@@ -3,8 +3,8 @@ import 'dart:collection';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:routeborn/src/app_page.dart';
 import 'package:routeborn/src/app_page_nodes_stack_utils.dart';
+import 'package:routeborn/src/routeborn_page.dart';
 import 'package:routeborn/src/routeborn_route_info_parser.dart';
 
 class NavigationStackError extends Error {
@@ -29,7 +29,7 @@ class NavigationStack<T> {
     return pageNodesStack.toString();
   }
 
-  Iterable<AppPage> activeStackFlattened() {
+  Iterable<RoutebornPage> activeStackFlattened() {
     return pageNodesStack.expand(
       (e) sync* {
         yield e.page;
@@ -63,7 +63,7 @@ class NavigationStack<T> {
     return NavigationStack(res..removeLast());
   }
 
-  NavigationStack<T> popUntil(bool Function(AppPage) predicate) {
+  NavigationStack<T> popUntil(bool Function(RoutebornPage) predicate) {
     final res = [...pageNodesStack];
     return NavigationStack(res.reversed
         .skipWhile((value) => !predicate(value.page))
@@ -192,7 +192,7 @@ class NavigationCrossroad<T> {
 }
 
 class AppPageNode<T> {
-  final AppPage page;
+  final RoutebornPage page;
   final NavigationCrossroad<T>? crossroad;
 
   AppPageNode({
@@ -252,7 +252,7 @@ class AppPageNode<T> {
   }
 
   AppPageNode<T> copyWith({
-    AppPage? page,
+    RoutebornPage? page,
     NavigationCrossroad<T>? crossroad,
   }) {
     return AppPageNode(
@@ -286,7 +286,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
     }
   }
 
-  List<AppPage> get rootPages =>
+  List<RoutebornPage> get rootPages =>
       _rootPageStack.pageNodesStack.map((e) => e.page).toList();
 
   NavigationNotifier(
@@ -298,7 +298,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
   AppPageNode<T>? _findAncestorPageNode(BuildContext context) {
     final page = ModalRoute.of(context)!.settings;
 
-    if (page is! AppPage) {
+    if (page is! RoutebornPage) {
       throw FlutterError('Closest ancestor page is not an AppPage.\n'
           'You are probably calling the method from dialog context.');
     }
@@ -324,7 +324,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
 
   /// The second return parameter is the AppPage type's name.
   /// This is purposed to be called from [NestedRouterDelegate].
-  Tuple4<GlobalKey<NavigatorState>, String, T, List<AppPage>>
+  Tuple4<GlobalKey<NavigatorState>, String, T, List<RoutebornPage>>
       findNestedNavKeyWithPages(
     BuildContext context, {
 
@@ -462,12 +462,12 @@ class NavigationNotifier<T> extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isCurrentPage<E extends AppPage>() {
-    return <AppPage>[..._rootPageStack.activeStackFlattened()].last is E;
+  bool isCurrentPage<E extends RoutebornPage>() {
+    return <RoutebornPage>[..._rootPageStack.activeStackFlattened()].last is E;
   }
 
-  bool containsPage<E extends AppPage>() {
-    return <AppPage>[
+  bool containsPage<E extends RoutebornPage>() {
+    return <RoutebornPage>[
       ..._rootPageStack.activeStackFlattened(),
     ].any((e) => e is E);
   }
@@ -604,7 +604,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
   ///
   void popUntil(
     BuildContext context,
-    bool Function(AppPage page) predicate,
+    bool Function(RoutebornPage page) predicate,
   ) {
     final navState = context.findAncestorStateOfType<NavigatorState>();
 

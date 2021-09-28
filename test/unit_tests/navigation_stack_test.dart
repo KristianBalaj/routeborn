@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:routeborn/src/app_page.dart';
 import 'package:routeborn/src/navigation_notifier.dart';
+import 'package:routeborn/src/routeborn_page.dart';
 
-class FakePage extends Fake implements AppPage {}
+class FakePage extends Fake implements RoutebornPage {}
 
-class FakeFavoritesPage extends Fake implements AppPage {}
+class FakeFavoritesPage extends Fake implements RoutebornPage {}
 
-class FakeCartPage extends Fake implements AppPage {}
+class FakeCartPage extends Fake implements RoutebornPage {}
 
-class FakeCategoriesPage extends Fake implements AppPage {}
+class FakeCategoriesPage extends Fake implements RoutebornPage {}
 
 enum _TestNestingBranch {
   shop,

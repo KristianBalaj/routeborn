@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:routeborn/routeborn.dart';
 
-class FavoritesPage extends AppPage {
+class FavoritesPage extends RoutebornPage {
   static const pagePathBase = 'favorites';
 
   FavoritesPage() : super.builder(pagePathBase, (_) => FavoritesPageView());

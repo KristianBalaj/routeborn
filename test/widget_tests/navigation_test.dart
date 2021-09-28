@@ -4,8 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:routeborn/src/app_page.dart';
 import 'package:routeborn/src/navigation_notifier.dart';
+import 'package:routeborn/src/routeborn_page.dart';
 import 'package:routeborn/src/routeborn_route_info_parser.dart';
 import 'package:routeborn/src/router_delegates/routeborn_nested_router_delegate.dart';
 import 'package:routeborn/src/router_delegates/routeborn_root_router_delegate.dart';
@@ -1886,9 +1886,9 @@ void main() {
   });
 }
 
-class TestPage404 extends Fake implements AppPage {}
+class TestPage404 extends Fake implements RoutebornPage {}
 
-class APage extends AppPage {
+class APage extends RoutebornPage {
   static const String pageKey = 'a';
 
   APage()
@@ -1933,7 +1933,7 @@ class APage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class BPage extends AppPage {
+class BPage extends RoutebornPage {
   static const String pageKey = 'b';
 
   BPage()
@@ -1968,7 +1968,7 @@ class BPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class CPage extends AppPage {
+class CPage extends RoutebornPage {
   static const String pageKey = 'c';
 
   CPage()
@@ -2011,7 +2011,7 @@ class CPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class DPage extends AppPage {
+class DPage extends RoutebornPage {
   static const String pageKey = 'd';
 
   DPage()
@@ -2114,7 +2114,7 @@ class DPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class EPage extends AppPage {
+class EPage extends RoutebornPage {
   static const String pageKey = 'e';
 
   EPage()
@@ -2169,7 +2169,7 @@ class EPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class FPage extends AppPage {
+class FPage extends RoutebornPage {
   static const String pageKey = 'f';
 
   FPage()
@@ -2204,7 +2204,7 @@ class FPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class GPage extends AppPage {
+class GPage extends RoutebornPage {
   static const String pageKey = 'g';
 
   GPage()
@@ -2277,7 +2277,7 @@ class GPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class HPage extends AppPage {
+class HPage extends RoutebornPage {
   static const String pageKey = 'h';
 
   HPage()
@@ -2301,7 +2301,7 @@ class HPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class IPage extends AppPage {
+class IPage extends RoutebornPage {
   static const String pageKey = 'i';
 
   IPage()
@@ -2319,7 +2319,7 @@ class IPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class JPage extends AppPage {
+class JPage extends RoutebornPage {
   static const String pageKey = 'j';
 
   JPage()
@@ -2337,7 +2337,7 @@ class JPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class KPage extends AppPage {
+class KPage extends RoutebornPage {
   static const String pageKey = 'k';
 
   KPage()
@@ -2403,7 +2403,7 @@ class KPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class LPage extends AppPage {
+class LPage extends RoutebornPage {
   static const String pageKey = 'l';
 
   LPage()
@@ -2442,7 +2442,7 @@ class LPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class MPage extends AppPage {
+class MPage extends RoutebornPage {
   static const String pageKey = 'm';
 
   MPage()
@@ -2460,7 +2460,7 @@ class MPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class NPage extends AppPage {
+class NPage extends RoutebornPage {
   static const String pageKey = 'n';
 
   NPage()
@@ -2483,7 +2483,7 @@ class NPage extends AppPage {
   String getPagePathBase() => pageKey;
 }
 
-class OPage extends AppPage {
+class OPage extends RoutebornPage {
   static const String pageKey = 'o';
 
   OPage()

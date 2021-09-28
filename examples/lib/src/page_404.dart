@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:routeborn/routeborn.dart';
 
-class Page404 extends AppPage {
+class Page404 extends RoutebornPage {
   static const pagePathBase = '404';
 
   Page404()

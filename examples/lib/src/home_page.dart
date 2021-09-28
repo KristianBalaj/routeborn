@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:routeborn/routeborn.dart';
 
-class HomePage extends AppPage {
+class HomePage extends RoutebornPage {
   static const pagePathBase = 'home';
 
   HomePage() : super.builder(pagePathBase, (_) => const HomePageView());

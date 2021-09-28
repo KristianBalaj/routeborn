@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-abstract class AppPage extends Page<dynamic> {
+/// This is the base [Page] type used for defining pages when
+/// using the routeborn package.
+abstract class RoutebornPage extends Page<dynamic> {
   /// Builder of the page widget.
   ///
   /// The [late final] is useful in case the builder
-  /// needs to access the [AppPage] instance.
+  /// needs to access the [RoutebornPage] instance.
   /// In that case the builder should be initialized in the contructor body.
   late final WidgetBuilder _builder;
 
@@ -19,7 +21,7 @@ abstract class AppPage extends Page<dynamic> {
   /// later (for the purpose of accessing the page instance).
   ///
   /// [pageArgs] parameter is used to distinguish each page instance
-  AppPage(
+  RoutebornPage(
     String name, {
     dynamic pageArgs,
   })  : uniqueKey = UniqueKey(),
@@ -31,7 +33,7 @@ abstract class AppPage extends Page<dynamic> {
   /// Use this constructor in case you can initialize the [builder]
   /// in the app_initialization list (no need for page instance).
   /// [pageArgs] parameter is used to distinguish each page instance
-  AppPage.builder(
+  RoutebornPage.builder(
     String name,
     WidgetBuilder builder, {
     dynamic pageArgs,

@@ -1,21 +1,23 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:routeborn/src/app_page.dart';
 import 'package:routeborn/src/navigation_notifier.dart';
 import 'package:routeborn/src/pages_configuration.dart';
+import 'package:routeborn/src/routeborn_page.dart';
 
 typedef ParametrizedPage = Left<
-    Tuple2<AppPage, List<String>> Function(List<String>), AppPage Function()>;
+    Tuple2<RoutebornPage, List<String>> Function(List<String>),
+    RoutebornPage Function()>;
 typedef NonParametrizedPage = Right<
-    Tuple2<AppPage, List<String>> Function(List<String>), AppPage Function()>;
+    Tuple2<RoutebornPage, List<String>> Function(List<String>),
+    RoutebornPage Function()>;
 
 class RouteNode<T> {
-  /// Builder of current node's [AppPage].
+  /// Builder of current node's [RoutebornPage].
   /// The [Left] argument is path parametrized page builder and
   /// the [Right] one is the page builder without parameters.
-  final Either<Tuple2<AppPage, List<String>> Function(List<String>),
-      AppPage Function()> appPageBuilder;
+  final Either<Tuple2<RoutebornPage, List<String>> Function(List<String>),
+      RoutebornPage Function()> appPageBuilder;
 
   /// These are the following pages that go after current page.
   ///
@@ -132,7 +134,7 @@ class RoutebornRouteInfoParser<T>
   final Map<String, RouteNode<T>> routes;
   final NavigationStack<T> Function() initialStackBuilder;
 
-  final AppPage page404;
+  final RoutebornPage page404;
 
   RoutebornRouteInfoParser({
     required this.routes,
@@ -154,7 +156,7 @@ class RoutebornRouteInfoParser<T>
   static NavigationStack<T> _parsePathSegments<T>(
     List<String> segments,
     Map<String, RouteNode<T>> routes,
-    AppPage page404,
+    RoutebornPage page404,
   ) {
     Iterable<AppPageNode<T>> _parse(
       _PathSegmentsWrapper segments,

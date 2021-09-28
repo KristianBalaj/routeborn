@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:routeborn/src/app_page.dart';
 import 'package:routeborn/src/navigation_notifier.dart';
 import 'package:routeborn/src/pages_configuration.dart';
+import 'package:routeborn/src/routeborn_page.dart';
 import 'package:routeborn/src/routeborn_route_info_parser.dart';
 
 import '../matchers/app_pages_matcher.dart';
@@ -558,15 +558,15 @@ void main() {
   );
 }
 
-class APage extends Fake implements AppPage {
+class APage extends Fake implements RoutebornPage {
   static const String pageKey = 'a';
 }
 
-class BPage extends Fake implements AppPage {
+class BPage extends Fake implements RoutebornPage {
   static const String pageKey = 'b';
   BPage(int param);
 
-  static Tuple2<AppPage, List<String>> fromPathParams(
+  static Tuple2<RoutebornPage, List<String>> fromPathParams(
     List<String> remainingPathArguments,
   ) {
     if (remainingPathArguments.isNotEmpty) {
@@ -580,11 +580,11 @@ class BPage extends Fake implements AppPage {
   }
 }
 
-class CPage extends Fake implements AppPage {
+class CPage extends Fake implements RoutebornPage {
   static const String pageKey = 'c';
   CPage(int param, int param2);
 
-  static Tuple2<AppPage, List<String>> fromPathParams(
+  static Tuple2<RoutebornPage, List<String>> fromPathParams(
     List<String> remainingPathArguments,
   ) {
     if (remainingPathArguments.length >= 2) {
@@ -602,11 +602,11 @@ class CPage extends Fake implements AppPage {
   }
 }
 
-class DPage extends Fake implements AppPage {
+class DPage extends Fake implements RoutebornPage {
   static const String pageKey = 'd';
   DPage(int param);
 
-  static Tuple2<AppPage, List<String>> fromPathParams(
+  static Tuple2<RoutebornPage, List<String>> fromPathParams(
     List<String> remainingPathArguments,
   ) {
     if (remainingPathArguments.isNotEmpty) {
@@ -620,12 +620,12 @@ class DPage extends Fake implements AppPage {
   }
 }
 
-class EPage extends Fake implements AppPage {
+class EPage extends Fake implements RoutebornPage {
   static const String pageKey = 'e';
 }
 
-class FPage extends Fake implements AppPage {
+class FPage extends Fake implements RoutebornPage {
   static const String pageKey = 'f';
 }
 
-class TestPage404 extends Fake implements AppPage {}
+class TestPage404 extends Fake implements RoutebornPage {}
