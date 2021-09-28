@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:examples/main.dart';
+import 'package:example/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:routeborn/routeborn.dart';
 
