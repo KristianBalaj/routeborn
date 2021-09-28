@@ -472,6 +472,22 @@ class NavigationNotifier<T> extends ChangeNotifier {
     ].any((e) => e is E);
   }
 
+  NavigationStack<T> _handleStackAction(
+    NavigationStack<T> Function(NavigationStack<T> currentStack) action,
+    Key navigatorKey,
+  ) {
+    if (navigatorKey == rootNavKey) {
+      return action(_rootPageStack);
+    } else {
+      return AppPageNodesStackUtil.updateNestedStack(
+        navigatorKey,
+        _rootPageStack,
+        (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
+            action(previousCrossroad.activeBranchStack)),
+      );
+    }
+  }
+
   void pushPage(
     BuildContext context,
     AppPageNode<T> page, {
@@ -490,20 +506,12 @@ class NavigationNotifier<T> extends ChangeNotifier {
       pushPage(navState.context, page);
     } else {
       final navState = context.findAncestorStateOfType<NavigatorState>();
-
       final key = navState?.widget.key ?? rootNavKey;
 
-      if (key == rootNavKey) {
-        _rootPageNodesSetter = _rootPageStack.pushPage(page);
-      } else {
-        _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
-          key,
-          _rootPageStack,
-          (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
-            previousCrossroad.activeBranchStack.pushPage(page),
-          ),
-        );
-      }
+      _rootPageNodesSetter = _handleStackAction(
+        (currentStack) => currentStack.pushPage(page),
+        key,
+      );
 
       notifyListeners();
     }
@@ -520,19 +528,12 @@ class NavigationNotifier<T> extends ChangeNotifier {
   void popPage(BuildContext context) {
     final navState = context.findAncestorStateOfType<NavigatorState>();
 
-    final key = navState!.widget.key;
+    final key = navState?.widget.key ?? rootNavKey;
 
-    if (key == rootNavKey) {
-      _rootPageNodesSetter = _rootPageStack.popPage();
-    } else {
-      _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
-        key!,
-        _rootPageStack,
-        (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
-          previousCrossroad.activeBranchStack.popPage(),
-        ),
-      );
-    }
+    _rootPageNodesSetter = _handleStackAction(
+      (currentStack) => currentStack.popPage(),
+      key,
+    );
 
     notifyListeners();
   }
@@ -546,19 +547,13 @@ class NavigationNotifier<T> extends ChangeNotifier {
   void replaceLastWith(BuildContext context, AppPageNode<T> page) {
     final navState = context.findAncestorStateOfType<NavigatorState>();
 
-    final key = navState!.widget.key;
+    final key = navState?.widget.key ?? rootNavKey;
 
-    if (key == rootNavKey) {
-      _rootPageNodesSetter = _rootPageStack.replaceLastWith(page);
-    } else {
-      _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
-        key!,
-        _rootPageStack,
-        (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
-          previousCrossroad.activeBranchStack.replaceLastWith(page),
-        ),
-      );
-    }
+    _rootPageNodesSetter = _handleStackAction(
+      (currentStack) => currentStack.replaceLastWith(page),
+      key,
+    );
+
     notifyListeners();
   }
 

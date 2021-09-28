@@ -33,6 +33,7 @@ void main() {
             CPage.pageKey: RouteNode(Right(() => CPage())),
           },
         ),
+        PPage.pageKey: RouteNode(Right(() => PPage())),
       },
     ),
     DPage.pageKey: RouteNode(
@@ -644,6 +645,62 @@ void main() {
           );
         },
       );
+
+      testWidgets(
+        'call replaceLastWith before the initial router',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                builder: (context, router) {
+                  return Column(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          navNotifier.replaceLastWith(
+                            context,
+                            AppPageNode(page: PPage()),
+                          );
+                        },
+                        child: Text('replace last with'),
+                      ),
+                      Expanded(child: router!)
+                    ],
+                  );
+                },
+                routeInformationParser:
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack([
+                    AppPageNode(page: APage()),
+                    AppPageNode(page: BPage()),
+                  ]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester
+              .tap(find.widgetWithText(TextButton, 'replace last with'));
+          await tester.pumpAndSettle();
+
+          expect(
+            navNotifier.rootPageNodes,
+            appPageNodesStackEquals<_TestNestingBranch>([
+              TestNode(APage, null),
+              TestNode(PPage, null),
+            ]),
+          );
+        },
+      );
     });
 
     group('popPage', () {
@@ -889,6 +946,57 @@ void main() {
                   },
                 ),
               ),
+            ]),
+          );
+        },
+      );
+
+      testWidgets(
+        'call popPage before the initial router',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                builder: (context, router) {
+                  return Column(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          navNotifier.popPage(context);
+                        },
+                        child: Text('pop page'),
+                      ),
+                      Expanded(child: router!)
+                    ],
+                  );
+                },
+                routeInformationParser:
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack([
+                    AppPageNode(page: APage()),
+                    AppPageNode(page: BPage()),
+                  ]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.widgetWithText(TextButton, 'pop page'));
+          await tester.pumpAndSettle();
+
+          expect(
+            navNotifier.rootPageNodes,
+            appPageNodesStackEquals<_TestNestingBranch>([
+              TestNode(APage, null),
             ]),
           );
         },
@@ -2597,6 +2705,24 @@ class OPage extends RoutebornPage {
                   .replaceLastWith(context, AppPageNode(page: NPage()));
             },
           ),
+        );
+
+  @override
+  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+      Right(pageKey);
+  @override
+  String getPagePath() => pageKey;
+  @override
+  String getPagePathBase() => pageKey;
+}
+
+class PPage extends RoutebornPage {
+  static const String pageKey = 'p';
+
+  PPage()
+      : super.builder(
+          pageKey,
+          (context) => Container(),
         );
 
   @override
