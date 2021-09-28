@@ -175,6 +175,7 @@ class NavigationCrossroad<T> {
 
     return NavigationCrossroad(
       navigatorKey: navigatorKey,
+      navigatorKeys: navigatorKeys,
       activeBranch: activeBranch,
       availableBranches: res,
     );
