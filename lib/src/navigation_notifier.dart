@@ -479,17 +479,25 @@ class NavigationNotifier<T> extends ChangeNotifier {
   }) {
     if (toParent) {
       final navState = context.findAncestorStateOfType<NavigatorState>();
-      pushPage(navState!.context, page);
+      if (navState == null) {
+        throw NavigationStackError(
+          'There is no Navigator in the given context. '
+          'Because of this a page cannot be pushed to parent navigator. '
+          'You can pushPage only with parameter toParent = false',
+        );
+      }
+
+      pushPage(navState.context, page);
     } else {
       final navState = context.findAncestorStateOfType<NavigatorState>();
 
-      final key = navState!.widget.key;
+      final key = navState?.widget.key ?? rootNavKey;
 
       if (key == rootNavKey) {
         _rootPageNodesSetter = _rootPageStack.pushPage(page);
       } else {
         _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
-          key!,
+          key,
           _rootPageStack,
           (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
             previousCrossroad.activeBranchStack.pushPage(page),

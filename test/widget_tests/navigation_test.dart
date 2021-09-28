@@ -318,6 +318,106 @@ void main() {
           );
         },
       );
+
+      testWidgets(
+        'call pushPage before the initial router',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                builder: (context, router) {
+                  return Column(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          navNotifier.pushPage(
+                              context, AppPageNode(page: BPage()));
+                        },
+                        child: Text('push BPage'),
+                      ),
+                      Expanded(child: router!)
+                    ],
+                  );
+                },
+                routeInformationParser:
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: APage())]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.widgetWithText(TextButton, 'push BPage'));
+          await tester.pumpAndSettle();
+
+          expect(
+            navNotifier.rootPageNodes,
+            appPageNodesStackEquals<_TestNestingBranch>([
+              TestNode(APage, null),
+              TestNode(BPage, null),
+            ]),
+          );
+        },
+      );
+
+      testWidgets(
+        'call pushPage with toParent=true before the initial router fails with NavigationStackError',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                builder: (context, router) {
+                  return Column(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          navNotifier.pushPage(
+                            context,
+                            AppPageNode(page: BPage()),
+                            toParent: true,
+                          );
+                        },
+                        child: Text('push BPage toParent'),
+                      ),
+                      Expanded(child: router!)
+                    ],
+                  );
+                },
+                routeInformationParser:
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
+                  routes: routes,
+                  initialStackBuilder: () =>
+                      NavigationStack([AppPageNode(page: APage())]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester
+              .tap(find.widgetWithText(TextButton, 'push BPage toParent'));
+          await tester.pumpAndSettle();
+
+          expect(tester.takeException(), isInstanceOf<NavigationStackError>());
+        },
+      );
     });
 
     group('replaceLastWith', () {
