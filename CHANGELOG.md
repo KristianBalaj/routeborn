@@ -1,3 +1,10 @@
+# 0.3.0
+- **feat:** adding simple example app using routeborn
+- **feat:** adding initial documentation
+- **feat:** `RoutebornPage` now uses `MaterialPageRoute` as a default route, making it possible to customize transitions via Theme
+- **fix:** page animations in nested routes when using multiple navigators 
+- **BREAKING:** changing `AppPage` to `RoutebornPage`
+
 # 0.2.6
 
 - **feat:** added option `inChildNavigator` to `replaceAllWith` method

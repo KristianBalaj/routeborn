@@ -35,7 +35,7 @@ Decide on the location of `Router` widgets in your app (Basic usage is by using 
 Other places should use the `Router` directly.
 Use the `RoutebornNestedRouterDelegate` and `RoutebornRootRouterDelegate`. 
 
-Next, define `AppPage` classes in your app based on your app logic. 
+Next, define `RoutebornPage` classes in your app based on your app logic. 
 Last but not least, define routes of your app ideally in a separate file called `routes.dart`. Run your app and use the `NavigationNotifier` to control your App's navigation.
 
 **NOTICE 1:** The router delegates should be preserved in memory during the lifetime of widgets that use them (widgets that are embedding the `Router` widget), so you should place them in a `InheritedWidget`, `StatefulWidget` or in any other state management mechanism of your choice (e.g. inside a `Provider` when using Riverpod state management, etc.).
@@ -107,6 +107,8 @@ You can file a new feature request as a Github issue or to change priority of th
 - [ ] Add examples
 - [ ] Upgrade documentation
   - [ ] Add FAQ
+- [ ] Wrapper object for routes
+- [ ] Drop 3rd party packages use
 - [ ] Test coverage
   - [ ] cover with tests where multiple navigators are used for a crossroad
   - [ ] validate navigator keys to be the same on changing nested stack in nested router delegate
