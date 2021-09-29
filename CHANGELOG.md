@@ -1,3 +1,7 @@
+# 0.3.1
+- **feat:** `pushPage`, `popPage`, `replaceLastWith`, `replaceAllWith` and `popUntil` now working even without a Navigator in the context (when called before an initial `Router`). The fallback `Router` on calling such methods will be the root `Router`.
+- **docs:** updating documentation's robustness 
+
 # 0.3.0
 - **feat:** adding simple example app using routeborn
 - **feat:** adding initial documentation
