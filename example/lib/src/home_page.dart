@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:examples/main.dart';
-import 'package:examples/src/help_page.dart';
-import 'package:examples/src/routes.dart';
+import 'package:example/main.dart';
+import 'package:example/src/help_page.dart';
+import 'package:example/src/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
