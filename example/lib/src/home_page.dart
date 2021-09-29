@@ -25,7 +25,7 @@ class HomePage extends RoutebornPage {
   String getPagePathBase() => pagePathBase;
 }
 
-final nestedRouterDelegate = Provider.family(
+final nestedRouterDelegate = Provider.autoDispose.family(
   (ref, branch) => RoutebornNestedRouterDelegate(
       ref.watch(navigationNotifierProvider),
       branch: branch),
