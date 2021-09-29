@@ -1621,6 +1621,112 @@ void main() {
           );
         },
       );
+
+      testWidgets(
+        'call replaceAllWith before the initial router',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                builder: (context, router) {
+                  return Column(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          navNotifier.replaceAllWith(context, [
+                            AppPageNode(page: APage()),
+                            AppPageNode(page: BPage()),
+                          ]);
+                        },
+                        child: Text('replace all with'),
+                      ),
+                      Expanded(child: router!)
+                    ],
+                  );
+                },
+                routeInformationParser:
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack([
+                    AppPageNode(page: APage()),
+                  ]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.widgetWithText(TextButton, 'replace all with'));
+          await tester.pumpAndSettle();
+
+          expect(
+            navNotifier.rootPageNodes,
+            appPageNodesStackEquals<_TestNestingBranch>([
+              TestNode(APage, null),
+              TestNode(BPage, null),
+            ]),
+          );
+        },
+      );
+
+      // testWidgets(
+      //   'call replaceAllWith with toParent=true before the initial router fails with NavigationStackError',
+      //   (tester) async {
+      //     final navNotifier = NavigationNotifier(routes);
+      //
+      //     await tester.pumpWidget(
+      //       UncontrolledProviderScope(
+      //         container: ProviderContainer(
+      //           overrides: [navigationProvider.overrideWithValue(navNotifier)],
+      //         ),
+      //         child: MaterialApp.router(
+      //           builder: (context, router) {
+      //             return Column(
+      //               children: [
+      //                 TextButton(
+      //                   onPressed: () {
+      //                     navNotifier.replaceAllWith(
+      //                       context,
+      //                       [
+      //                         AppPageNode(page: APage()),
+      //                         AppPageNode(page: BPage())
+      //                       ],
+      //                       toParent: true,
+      //                     );
+      //                   },
+      //                   child: Text('replaceAllWith toParent'),
+      //                 ),
+      //                 Expanded(child: router!)
+      //               ],
+      //             );
+      //           },
+      //           routeInformationParser:
+      //               RoutebornRouteInfoParser<_TestNestingBranch>(
+      //             routes: routes,
+      //             initialStackBuilder: () =>
+      //                 NavigationStack([AppPageNode(page: APage())]),
+      //             page404: TestPage404(),
+      //           ),
+      //           routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+      //         ),
+      //       ),
+      //     );
+      //     await tester.pumpAndSettle();
+      //
+      //     await tester
+      //         .tap(find.widgetWithText(TextButton, 'replaceAllWith toParent'));
+      //     await tester.pumpAndSettle();
+      //
+      //     expect(tester.takeException(), isInstanceOf<NavigationStackError>());
+      //   },
+      // );
     });
 
     group('popUntil', () {
@@ -1729,6 +1835,58 @@ void main() {
           ]),
         );
       });
+
+      testWidgets(
+        'call popUntil before the initial router',
+        (tester) async {
+          final navNotifier = NavigationNotifier(routes);
+
+          await tester.pumpWidget(
+            UncontrolledProviderScope(
+              container: ProviderContainer(
+                overrides: [navigationProvider.overrideWithValue(navNotifier)],
+              ),
+              child: MaterialApp.router(
+                builder: (context, router) {
+                  return Column(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          navNotifier.popUntil(
+                              context, (page) => page.runtimeType == APage);
+                        },
+                        child: Text('pop until'),
+                      ),
+                      Expanded(child: router!)
+                    ],
+                  );
+                },
+                routeInformationParser:
+                    RoutebornRouteInfoParser<_TestNestingBranch>(
+                  routes: routes,
+                  initialStackBuilder: () => NavigationStack([
+                    AppPageNode(page: APage()),
+                    AppPageNode(page: BPage()),
+                  ]),
+                  page404: TestPage404(),
+                ),
+                routerDelegate: RoutebornRootRouterDelegate(navNotifier),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.widgetWithText(TextButton, 'pop until'));
+          await tester.pumpAndSettle();
+
+          expect(
+            navNotifier.rootPageNodes,
+            appPageNodesStackEquals<_TestNestingBranch>([
+              TestNode(APage, null),
+            ]),
+          );
+        },
+      );
     });
   });
 

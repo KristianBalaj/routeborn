@@ -585,19 +585,12 @@ class NavigationNotifier<T> extends ChangeNotifier {
     } else {
       final navState = context.findAncestorStateOfType<NavigatorState>();
 
-      final key = navState!.widget.key;
+      final key = navState?.widget.key ?? rootNavKey;
 
-      if (key == rootNavKey) {
-        _rootPageNodesSetter = _rootPageStack.replaceAllWith(pages);
-      } else {
-        _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
-          key!,
-          _rootPageStack,
-          (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
-            previousCrossroad.activeBranchStack.replaceAllWith(pages),
-          ),
-        );
-      }
+      _rootPageNodesSetter = _handleStackAction(
+        (currentStack) => currentStack.replaceAllWith(pages),
+        key,
+      );
     }
 
     notifyListeners();
@@ -611,18 +604,11 @@ class NavigationNotifier<T> extends ChangeNotifier {
   ) {
     final navState = context.findAncestorStateOfType<NavigatorState>();
 
-    final key = navState!.widget.key;
+    final key = navState?.widget.key ?? rootNavKey;
 
-    if (key == rootNavKey) {
-      _rootPageNodesSetter = _rootPageStack.popUntil(predicate);
-    } else {
-      _rootPageNodesSetter = AppPageNodesStackUtil.updateNestedStack(
-        key!,
-        _rootPageStack,
-        (previousCrossroad) => previousCrossroad.copyWithActiveBranchStack(
-          previousCrossroad.activeBranchStack.popUntil(predicate),
-        ),
-      );
-    }
+    _rootPageNodesSetter = _handleStackAction(
+      (currentStack) => currentStack.popUntil(predicate),
+      key,
+    );
   }
 }
