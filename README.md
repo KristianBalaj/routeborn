@@ -68,7 +68,7 @@ On the other hand, the `RoutebornNestedRouterDelegate` will be created and destr
 - No need for a `build_runner` that slows down your CI/CD
 - Basic control to the navigation stack
   - `pushPage`, `popPage`, `popUntil`, `replaceAllWith`, `replaceLastWith`, `replaceRootStackWith` and `setNestingBranch` used for the nested navigation
-  - Also, getting the state of navigation stack: `canPop`, `isLastPage<T>`, `containsPage<T>` and for the nested navigation the `getNestingBranch`
+  - Also, getting the state of navigation stack: `canPop`, `isLastPage<T>`, `containsPage<T>`, `getNavigationStack` and specifically for the nested navigation the `getNestingBranch`
 - Nested navigation
   - Controlling parent or __even the child navigation stack__ using the `BuildContext` (__BOOM: game-changer__, this is actually a nice simplification, where you don't need to pass `Key`s to children to access them)
   - Endless nesting (However, I can't imagine higher level of nesting than 3 :) )

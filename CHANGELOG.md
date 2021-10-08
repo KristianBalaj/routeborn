@@ -1,3 +1,6 @@
+# 0.3.2
+- **feat:** `getNavigationStack` method implemented.
+
 # 0.3.1
 - **feat:** `pushPage`, `popPage`, `replaceLastWith`, `replaceAllWith` and `popUntil` now working even without a Navigator in the context (when called before an initial `Router`). The fallback `Router` on calling such methods will be the root `Router`.
 - **docs:** updating documentation's robustness 
