@@ -1,3 +1,6 @@
+# 0.3.3
+- **fix:** `popUntil` was not calling notifyListeners
+
 # 0.3.2
 - **feat:** `getNavigationStack` method implemented.
 

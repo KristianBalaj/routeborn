@@ -610,6 +610,8 @@ class NavigationNotifier<T> extends ChangeNotifier {
       (currentStack) => currentStack.popUntil(predicate),
       key,
     );
+
+    notifyListeners();
   }
 
   NavigationStack<T> getNavigationStack(BuildContext context) {
