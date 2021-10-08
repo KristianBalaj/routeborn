@@ -272,7 +272,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
   NavigationStack<T> _rootPageStack;
   final Map<String, RouteNode<T>> _routes;
 
-  NavigationStack<T> get rootPageNodes => _rootPageStack;
+  NavigationStack<T> get rootPageStack => _rootPageStack;
 
   set _rootPageNodesSetter(NavigationStack<T> newStack) {
     try {
@@ -393,7 +393,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
       final navState = context.findAncestorStateOfType<NavigatorState>();
 
       final crossroad = AppPageNodesStackUtil.findCrossroadInActiveStackByKey(
-          navState!.widget.key!, rootPageNodes);
+          navState!.widget.key!, rootPageStack);
 
       if (crossroad == null) {
         throw NavigationStackError(
@@ -610,5 +610,20 @@ class NavigationNotifier<T> extends ChangeNotifier {
       (currentStack) => currentStack.popUntil(predicate),
       key,
     );
+  }
+
+  NavigationStack<T> getNavigationStack(BuildContext context) {
+    final navState = context.findAncestorStateOfType<NavigatorState>();
+
+    if (navState?.widget.key != null) {
+      final crossroad = AppPageNodesStackUtil.findCrossroadInActiveStackByKey(
+        navState!.widget.key!,
+        _rootPageStack,
+      );
+
+      return crossroad?.activeBranchStack ?? _rootPageStack;
+    } else {
+      return _rootPageStack;
+    }
   }
 }

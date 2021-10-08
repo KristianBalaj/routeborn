@@ -16,7 +16,7 @@ class RoutebornRootRouterDelegate<T>
 
   @override
   PagesConfiguration<T> get currentConfiguration =>
-      PagesConfiguration(pagesStack: navigationNotifier.rootPageNodes);
+      PagesConfiguration(pagesStack: navigationNotifier.rootPageStack);
 
   RoutebornRootRouterDelegate(
     this.navigationNotifier, {

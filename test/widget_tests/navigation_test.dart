@@ -134,7 +134,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(APage, null),
               TestNode(BPage, null),
@@ -145,7 +145,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(APage, null),
               TestNode(BPage, null),
@@ -184,7 +184,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -242,7 +242,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
@@ -300,7 +300,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
@@ -362,7 +362,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(APage, null),
               TestNode(BPage, null),
@@ -451,7 +451,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -520,7 +520,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -553,7 +553,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -626,7 +626,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
@@ -693,7 +693,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(APage, null),
               TestNode(PPage, null),
@@ -734,7 +734,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(APage, null),
             TestNode(BPage, null),
@@ -746,7 +746,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(APage, null),
           ]),
@@ -792,7 +792,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -826,7 +826,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -932,7 +932,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
@@ -994,7 +994,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(APage, null),
             ]),
@@ -1084,7 +1084,7 @@ void main() {
               'expect nestingBranch favorites from ${HPage.pageKey}'));
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -1150,7 +1150,7 @@ void main() {
               'expect nestingBranch of child favorites from ${DPage.pageKey}'));
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -1205,7 +1205,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
@@ -1224,7 +1224,7 @@ void main() {
               'set branch favorites in child from ${KPage.pageKey}'));
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
@@ -1243,7 +1243,7 @@ void main() {
               TextButton, 'set branch shop in child from ${KPage.pageKey}'));
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
@@ -1303,7 +1303,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -1376,7 +1376,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 DPage,
@@ -1435,7 +1435,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
@@ -1490,7 +1490,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
@@ -1545,7 +1545,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
@@ -1602,7 +1602,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(
                 KPage,
@@ -1667,7 +1667,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(APage, null),
               TestNode(BPage, null),
@@ -1761,7 +1761,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(APage, null),
           ]),
@@ -1809,7 +1809,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
@@ -1880,7 +1880,7 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(
-            navNotifier.rootPageNodes,
+            navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
               TestNode(APage, null),
             ]),
@@ -1916,7 +1916,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        navNotifier.rootPageNodes,
+        navNotifier.rootPageStack,
         appPageNodesStackEquals<_TestNestingBranch>([
           TestNode(
             DPage,
@@ -1982,7 +1982,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
@@ -2047,7 +2047,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          navNotifier.rootPageNodes,
+          navNotifier.rootPageStack,
           appPageNodesStackEquals<_TestNestingBranch>([
             TestNode(
               DPage,
