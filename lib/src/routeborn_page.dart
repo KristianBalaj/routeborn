@@ -13,8 +13,6 @@ abstract class RoutebornPage extends Page<dynamic> {
   /// In that case the builder should be initialized in the contructor body.
   late final WidgetBuilder _builder;
 
-  final UniqueKey uniqueKey;
-
   set builder(WidgetBuilder builder) => _builder = builder;
 
   /// Use this constructor in case you need to initialize the [builder]
@@ -24,8 +22,7 @@ abstract class RoutebornPage extends Page<dynamic> {
   RoutebornPage(
     String name, {
     dynamic pageArgs,
-  })  : uniqueKey = UniqueKey(),
-        super(
+  }) : super(
           key: _createKey(name, pageArgs),
           name: name,
         );
@@ -37,8 +34,7 @@ abstract class RoutebornPage extends Page<dynamic> {
     String name,
     WidgetBuilder builder, {
     dynamic pageArgs,
-  })  : uniqueKey = UniqueKey(),
-        super(
+  }) : super(
           key: _createKey(name, pageArgs),
           name: name,
         ) {

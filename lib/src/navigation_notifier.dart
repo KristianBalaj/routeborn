@@ -303,11 +303,11 @@ class NavigationNotifier<T> extends ChangeNotifier {
           'You are probably calling the method from dialog context.');
     }
 
-    final uniqueKeyToFind = page.uniqueKey;
+    final uniqueKeyToFind = page.key;
 
     AppPageNode<T>? _internalFind(NavigationStack<T> stack) {
       for (var i = 0; i < stack.pageNodesStack.length; i++) {
-        if (stack.pageNodesStack[i].page.uniqueKey == uniqueKeyToFind) {
+        if (stack.pageNodesStack[i].page.key == uniqueKeyToFind) {
           return stack.pageNodesStack[i];
         }
 
