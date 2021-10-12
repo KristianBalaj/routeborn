@@ -1,3 +1,6 @@
+# 0.3.4
+- **refactor:** remove unnecessary field in `RoutebornPage`
+
 # 0.3.3
 - **fix:** `popUntil` was not calling notifyListeners
 
