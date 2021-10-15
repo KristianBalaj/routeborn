@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart' show Either, Tuple2;
+import 'package:dartz/dartz.dart' show Either, Left, Tuple2;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ abstract class RoutebornPage extends Page<dynamic> {
   /// The first value of the [Either] is used in case the page name is asynchronous.
   /// [null] value is for the loading state.
   /// The stream is updating when the name gets loaded.
-  Either<Stream<String?>, String> getPageName(BuildContext context);
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context);
 
   /// This is only the page path base. E.g. pagePath = /smth/1
   /// The page path base is the one without arguments as following = /smth/
@@ -69,5 +69,48 @@ abstract class RoutebornPage extends Page<dynamic> {
   @override
   String toString() {
     return '{Hashcode: $hashCode, ${super.toString()}}';
+  }
+}
+
+typedef SetPageNameCallback = void Function(String pageName);
+
+mixin UpdatablePageNameMixin on RoutebornPage {
+  final _pageNameNotifier = ValueNotifier<String?>(null);
+
+  void setPageName(
+    BuildContext context,
+    String pageName,
+  ) {
+    final pageSettings = ModalRoute.of(context)?.settings;
+
+    assert(() {
+      if (pageSettings == null) {
+        throw FlutterError('Given context has no route');
+      }
+      return true;
+    }());
+
+    assert(() {
+      if (pageSettings is! UpdatablePageNameMixin) {
+        throw FlutterError(
+            'Route of this context is not of type AsyncPageNameMixin. '
+            'You cannot set page name of such page.'
+            ' Add the AsyncPageNameMixing to the page.');
+      }
+      return true;
+    }());
+
+    if ((pageSettings as UpdatablePageNameMixin)._pageNameNotifier.value !=
+        pageName) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        pageSettings._pageNameNotifier.value = pageName;
+      });
+    }
+  }
+
+  @override
+  @nonVirtual
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) {
+    return Left(_pageNameNotifier);
   }
 }

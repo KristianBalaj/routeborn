@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:routeborn/routeborn.dart';
 
@@ -14,7 +15,7 @@ class Page404 extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right('');
 
   @override

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:routeborn/routeborn.dart';
 
@@ -9,7 +10,7 @@ class FavoritesPage extends RoutebornPage {
   FavoritesPage() : super.builder(pagePathBase, (_) => FavoritesPageView());
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right('');
 
   @override

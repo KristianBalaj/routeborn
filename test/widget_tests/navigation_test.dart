@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -2291,7 +2290,7 @@ class APage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2326,7 +2325,7 @@ class BPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2369,7 +2368,7 @@ class CPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2472,7 +2471,7 @@ class DPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2527,7 +2526,7 @@ class EPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2562,7 +2561,7 @@ class FPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2635,7 +2634,7 @@ class GPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2659,7 +2658,7 @@ class HPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2677,7 +2676,7 @@ class IPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2695,7 +2694,7 @@ class JPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2761,7 +2760,7 @@ class KPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2800,7 +2799,7 @@ class LPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2818,7 +2817,7 @@ class MPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2841,7 +2840,7 @@ class NPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2866,7 +2865,7 @@ class OPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;
@@ -2884,7 +2883,7 @@ class PPage extends RoutebornPage {
         );
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right(pageKey);
   @override
   String getPagePath() => pageKey;

@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:example/main.dart';
 import 'package:example/src/product_detail_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,7 +14,7 @@ class ShopPage extends RoutebornPage {
   ShopPage() : super.builder(pagePathBase, (_) => ShopPageView());
 
   @override
-  Either<Stream<String?>, String> getPageName(BuildContext context) =>
+  Either<ValueListenable<String?>, String> getPageName(BuildContext context) =>
       Right('');
 
   @override
