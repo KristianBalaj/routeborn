@@ -1,3 +1,6 @@
+# 0.3.6
+- **fix:** export `UpdatablePageNameMixin`
+
 # 0.3.5
 - **feat:** added `UpdatablePageNameMixin`
 

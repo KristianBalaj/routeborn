@@ -2,7 +2,7 @@ library routeborn;
 
 export 'src/navigation_notifier.dart'
     show NavigationNotifier, AppPageNode, NavigationCrossroad, NavigationStack;
-export 'src/routeborn_page.dart' show RoutebornPage;
+export 'src/routeborn_page.dart' show RoutebornPage, UpdatablePageNameMixin;
 export 'src/routeborn_route_info_parser.dart'
     show
         RoutebornRouteInfoParser,
