@@ -1,5 +1,8 @@
 # 0.3.6
-- **fix:** export `UpdatablePageNameMixin`
+- **feat:** export `SetPageNameCallback`
+
+# 0.3.6
+- **feat:** export `UpdatablePageNameMixin`
 
 # 0.3.5
 - **feat:** added `UpdatablePageNameMixin`
