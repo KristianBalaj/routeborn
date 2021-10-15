@@ -1,3 +1,6 @@
+# 0.3.5
+- **feat:** added `UpdatablePageNameMixin`
+
 # 0.3.4
 - **refactor:** remove unnecessary field in `RoutebornPage`
 
