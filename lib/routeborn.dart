@@ -13,6 +13,6 @@ export 'src/routeborn_route_info_parser.dart'
         ParametrizedPage,
         NonParametrizedPage;
 export 'src/router_delegates/routeborn_nested_router_delegate.dart'
-    show RoutebornNestedRouterDelegate;
+    show RoutebornNestedRouterDelegate, RoutebornBranchParams;
 export 'src/router_delegates/routeborn_root_router_delegate.dart'
     show RoutebornRootRouterDelegate;

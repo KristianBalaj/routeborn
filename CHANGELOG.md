@@ -1,3 +1,6 @@
+# 0.4.0
+- **feat:** nesting branch can now be parametrized via `RoutebornBranchParams`
+
 # 0.3.7
 - **feat:** export `SetPageNameCallback`
 

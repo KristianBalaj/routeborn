@@ -89,10 +89,11 @@ class RoutebornBranchParams extends StatefulWidget {
     this.param,
   }) : super(key: key);
 
-  /// Gets the [RoutebornBranchParamsState] to acquire the page params.
+  /// Gets the [_RoutebornBranchParamsState] to acquire the page params.
   /// NOTICE: call this from a context in the given branch.
-  static RoutebornBranchParamsState of(BuildContext context) {
-    final state = context.findAncestorStateOfType<RoutebornBranchParamsState>();
+  static _RoutebornBranchParamsState of(BuildContext context) {
+    final state =
+        context.findAncestorStateOfType<_RoutebornBranchParamsState>();
 
     assert(() {
       if (state == null) {
@@ -108,10 +109,10 @@ class RoutebornBranchParams extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() => RoutebornBranchParamsState();
+  State<StatefulWidget> createState() => _RoutebornBranchParamsState();
 }
 
-class RoutebornBranchParamsState extends State<RoutebornBranchParams> {
+class _RoutebornBranchParamsState extends State<RoutebornBranchParams> {
   /// Get the param of the state with its given type.
   /// Throws a type error in case the passed type is incorrect.
   T? getBranchParam<T>() {
