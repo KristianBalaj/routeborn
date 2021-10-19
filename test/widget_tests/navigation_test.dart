@@ -1082,6 +1082,9 @@ void main() {
           await tester.tap(find.widgetWithText(TextButton,
               'expect nestingBranch favorites from ${HPage.pageKey}'));
 
+          await tester.tap(find.widgetWithText(TextButton,
+              'expect param of nestingBranch from ${HPage.pageKey}'));
+
           expect(
             navNotifier.rootPageStack,
             appPageNodesStackEquals<_TestNestingBranch>([
@@ -1221,6 +1224,11 @@ void main() {
 
           await tester.tap(find.widgetWithText(TextButton,
               'set branch favorites in child from ${KPage.pageKey}'));
+
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.widgetWithText(TextButton,
+              'expect param of nestingBranch from ${MPage.pageKey}'));
 
           expect(
             navNotifier.rootPageStack,
@@ -2610,9 +2618,11 @@ class GPage extends RoutebornPage {
               TextButton(
                 child: Text('setBranch favorites from $pageKey'),
                 onPressed: () {
-                  context
-                      .read(navigationProvider)
-                      .setNestingBranch(context, _TestNestingBranch.favorites);
+                  context.read(navigationProvider).setNestingBranch(
+                    context,
+                    _TestNestingBranch.favorites,
+                    branchParam: [1, 2, 3],
+                  );
                 },
               ),
               TextButton(
@@ -2648,12 +2658,29 @@ class HPage extends RoutebornPage {
   HPage()
       : super.builder(
           pageKey,
-          (context) => TextButton(
-            child: Text('expect nestingBranch favorites from $pageKey'),
-            onPressed: () {
-              expect(context.read(navigationProvider).getNestingBranch(context),
-                  _TestNestingBranch.favorites);
-            },
+          (context) => Column(
+            children: [
+              TextButton(
+                child: Text('expect nestingBranch favorites from $pageKey'),
+                onPressed: () {
+                  expect(
+                      context
+                          .read(navigationProvider)
+                          .getNestingBranch(context),
+                      _TestNestingBranch.favorites);
+                },
+              ),
+              TextButton(
+                child: Text('expect param of nestingBranch from $pageKey'),
+                onPressed: () {
+                  expect(
+                    RoutebornBranchParams.of(context)
+                        .getBranchParam<List<int>>(),
+                    [1, 2, 3],
+                  );
+                },
+              ),
+            ],
           ),
         );
 
@@ -2748,10 +2775,13 @@ class KPage extends RoutebornPage {
                           Text('set branch favorites in child from $pageKey'),
                       onPressed: () {
                         context.read(navigationProvider).setNestingBranch(
-                            context, _TestNestingBranch.favorites,
-                            inChildNavigator: true);
+                              context,
+                              _TestNestingBranch.favorites,
+                              inChildNavigator: true,
+                              branchParam: MPage.pageKey,
+                            );
                       },
-                    )
+                    ),
                   ],
                 ),
               );
@@ -2813,7 +2843,15 @@ class MPage extends RoutebornPage {
   MPage()
       : super.builder(
           pageKey,
-          (context) => Container(),
+          (context) => TextButton(
+            child: Text('expect param of nestingBranch from $pageKey'),
+            onPressed: () {
+              expect(
+                RoutebornBranchParams.of(context).getBranchParam<String>(),
+                pageKey,
+              );
+            },
+          ),
         );
 
   @override

@@ -1,4 +1,4 @@
-# 0.3.6
+# 0.3.7
 - **feat:** export `SetPageNameCallback`
 
 # 0.3.6

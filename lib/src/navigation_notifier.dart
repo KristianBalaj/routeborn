@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -76,11 +77,17 @@ class NavigationStack<T> {
 /// Generic parameter [T] is a type for annotating nested branches.
 /// Most common type is an enum.
 class NavigationCrossroad<T> {
-  /// This is used in case we want a single router covering all the branches.
+  /// This is used in case we want a single [Router] covering all the branches.
   final GlobalKey<NavigatorState> navigatorKey;
 
-  /// This is used when we want single router per branch.
+  /// This branch param is used when a single [Router] is covering all the branches
+  final Object? branchParam;
+
+  /// This is used when we want single [Router] per branch.
   late final UnmodifiableMapView<T, GlobalKey<NavigatorState>> navigatorKeys;
+
+  /// This is used when we have a [Router] per branch.
+  late final UnmodifiableMapView<T, Object?> branchParams;
 
   /// This is the currently selected branch.
   final T activeBranch;
@@ -93,8 +100,33 @@ class NavigationCrossroad<T> {
     Map<T, NavigationStack<T>>? availableBranches,
     GlobalKey<NavigatorState>? navigatorKey,
     Map<T, GlobalKey<NavigatorState>>? navigatorKeys,
+    this.branchParam,
+    Map<T, Object?>? branchParams,
   })  : availableBranches = UnmodifiableMapView(availableBranches ?? {}),
         navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>() {
+    this.branchParams = UnmodifiableMapView(
+      branchParams != null
+          ? {
+              ...branchParams,
+              ...Map.fromEntries(this
+                  .availableBranches
+                  .keys
+                  .toSet()
+                  .difference(branchParams.keys.toSet())
+                  .map((e) => MapEntry(e, null))),
+            }
+          : Map.fromEntries(
+              this.availableBranches.keys.map((e) => MapEntry(e, null))),
+    );
+
+    assert(() {
+      if (this.branchParams.length != this.availableBranches.length) {
+        throw NavigationStackError(
+            'branchParams list needs to have the size equal to the branches count');
+      }
+      return true;
+    }());
+
     this.navigatorKeys = UnmodifiableMapView(
       navigatorKeys != null
           ? {
@@ -146,6 +178,7 @@ class NavigationCrossroad<T> {
     /// Resets the stack of the given branch.
     /// Meaning it will be filled with default stack based on routes.
     bool resetBranch = false,
+    Object? branchParam,
   }) {
     final tmp = NavigationCrossroad(
       navigatorKey: navigatorKey,
@@ -154,6 +187,17 @@ class NavigationCrossroad<T> {
       availableBranches: availableBranches != null
           ? UnmodifiableMapView(availableBranches)
           : this.availableBranches,
+      branchParam: branchParam ?? this.branchParam,
+      branchParams: branchParam != null
+          ? branchParams.map(
+              (key, value) => MapEntry(
+                key,
+                key == (activeBranch ?? this.activeBranch)
+                    ? branchParam
+                    : value,
+              ),
+            )
+          : branchParams,
     );
 
     if (resetBranch) {
@@ -178,6 +222,8 @@ class NavigationCrossroad<T> {
       navigatorKeys: navigatorKeys,
       activeBranch: activeBranch,
       availableBranches: res,
+      branchParam: branchParam,
+      branchParams: branchParams,
     );
   }
 
@@ -324,7 +370,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
 
   /// The second return parameter is the AppPage type's name.
   /// This is purposed to be called from [NestedRouterDelegate].
-  Tuple4<GlobalKey<NavigatorState>, String, T, List<RoutebornPage>>
+  Tuple5<GlobalKey<NavigatorState>, String, T, List<RoutebornPage>, Object?>
       findNestedNavKeyWithPages(
     BuildContext context, {
 
@@ -350,22 +396,24 @@ class NavigationNotifier<T> extends ChangeNotifier {
     }
 
     if (branch == null) {
-      return Tuple4(
+      return Tuple5(
         node.crossroad!.navigatorKey,
         node.page.runtimeType.toString(),
         node.crossroad!.activeBranch,
         node.crossroad!.activeBranchStack.pageNodesStack
             .map((e) => e.page)
             .toList(),
+        node.crossroad!.branchParam,
       );
     } else {
-      return Tuple4(
+      return Tuple5(
         node.crossroad!.navigatorKeys[branch]!,
         node.page.runtimeType.toString(),
         branch,
         node.crossroad!.availableBranches[branch]!.pageNodesStack
             .map((e) => e.page)
             .toList(),
+        node.crossroad!.branchParams[branch],
       );
     }
   }
@@ -412,11 +460,15 @@ class NavigationNotifier<T> extends ChangeNotifier {
   /// To reset the stack of the branch to be set,
   /// set the parameter [resetBranchStack] to [true].
   /// While reset meaning to fill the stack with the initial page.
+  ///
+  /// The [branchParam] parameter is used to set the parameter
+  /// in the [RoutebornBranchParams].
   void setNestingBranch(
     BuildContext context,
     T branch, {
     bool inChildNavigator = false,
     bool resetBranchStack = false,
+    Object? branchParam,
   }) {
     if (inChildNavigator) {
       final parentPageNode = _findAncestorPageNode(context);
@@ -438,6 +490,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
         (previousCrossroad) => previousCrossroad.copyWith(
           activeBranch: branch,
           resetBranch: resetBranchStack,
+          branchParam: branchParam,
         ),
       );
     } else {
@@ -454,6 +507,7 @@ class NavigationNotifier<T> extends ChangeNotifier {
           (previousCrossroad) => previousCrossroad.copyWith(
             activeBranch: branch,
             resetBranch: resetBranchStack,
+            branchParam: branchParam,
           ),
         );
       }

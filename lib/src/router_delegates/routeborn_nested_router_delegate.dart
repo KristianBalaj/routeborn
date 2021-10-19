@@ -43,26 +43,83 @@ class RoutebornNestedRouterDelegate<T>
     );
 
     navigatorKey = res.value1;
+    final branchParam = res.value5;
     // _logger.info(
     //     'Nested router of page [${res.value2}] for branch [${res.value3}] pages stack: ${res.value4}');
 
-    return Navigator(
-      key: navigatorKey,
-      pages: res.value4,
-      onPopPage: (route, dynamic result) {
-        // TODO: implement this
-        // if(navigationNotifier.canPop()) {
-        //
-        // }
-        // navigationNotifier.popPage();
-        return false;
-      },
-      // transitionDelegate: NoAnimationTransitionDelegate(),
+    return RoutebornBranchParams(
+      param: branchParam,
+      child: Navigator(
+        key: navigatorKey,
+        pages: res.value4,
+        onPopPage: (route, dynamic result) {
+          // TODO: implement this
+          // if(navigationNotifier.canPop()) {
+          //
+          // }
+          // navigationNotifier.popPage();
+          return false;
+        },
+        // transitionDelegate: NoAnimationTransitionDelegate(),
+      ),
     );
   }
 
   @override
   Future<void> setNewRoutePath(PagesConfiguration<T> configuration) {
     return SynchronousFuture(null);
+  }
+}
+
+/// This is used for parametrizing a nested branch.
+/// The API for switching a nesting branch is by setting the branch
+/// and not calling page's constructor directly.
+/// Because of this there cannot be parameters passed to the Page.
+///
+/// This [RoutebornBranchParams] mechanism enables parametrizing
+/// the nesting branch even when there are multiple pages
+/// in the branch already.
+class RoutebornBranchParams extends StatefulWidget {
+  final Widget child;
+  final Object? param;
+
+  const RoutebornBranchParams({
+    Key? key,
+    required this.child,
+    this.param,
+  }) : super(key: key);
+
+  /// Gets the [RoutebornBranchParamsState] to acquire the page params.
+  /// NOTICE: call this from a context in the given branch.
+  static RoutebornBranchParamsState of(BuildContext context) {
+    final state = context.findAncestorStateOfType<RoutebornBranchParamsState>();
+
+    assert(() {
+      if (state == null) {
+        throw NavigationStackError(
+          'RoutebornBranchParamsState could not be found '
+          'in the given context\'s widget tree.',
+        );
+      }
+      return true;
+    }());
+
+    return state!;
+  }
+
+  @override
+  State<StatefulWidget> createState() => RoutebornBranchParamsState();
+}
+
+class RoutebornBranchParamsState extends State<RoutebornBranchParams> {
+  /// Get the param of the state with its given type.
+  /// Throws a type error in case the passed type is incorrect.
+  T? getBranchParam<T>() {
+    return widget.param as T?;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }
