@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart' show Either, Left, Tuple2;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -60,11 +62,26 @@ abstract class RoutebornPage extends Page<dynamic> {
   String getPagePath();
 
   @override
-  Route<dynamic> createRoute(BuildContext context) =>
-      MaterialPageRoute<dynamic>(
+  Route<dynamic> createRoute(BuildContext context) {
+    if (kIsWeb) {
+      return PageRouteBuilder<dynamic>(
         settings: this,
-        builder: _builder,
+        pageBuilder: (context, _, __) => _builder(context),
       );
+    } else {
+      if (Platform.isIOS) {
+        return CupertinoPageRoute<dynamic>(
+          settings: this,
+          builder: _builder,
+        );
+      } else {
+        return MaterialPageRoute<dynamic>(
+          settings: this,
+          builder: _builder,
+        );
+      }
+    }
+  }
 
   @override
   String toString() {
