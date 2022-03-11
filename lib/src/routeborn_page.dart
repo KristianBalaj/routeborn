@@ -67,6 +67,8 @@ abstract class RoutebornPage extends Page<dynamic> {
       return PageRouteBuilder<dynamic>(
         settings: this,
         pageBuilder: (context, _, __) => _builder(context),
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
       );
     } else {
       if (Platform.isIOS) {
