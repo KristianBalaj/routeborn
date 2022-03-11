@@ -1,3 +1,6 @@
+# 0.4.1
+- **feat:** specifying route transitions per platform
+
 # 0.4.0
 - **feat:** nesting branch can now be parametrized via `RoutebornBranchParams`
 
