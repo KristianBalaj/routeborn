@@ -1,6 +1,6 @@
 name: routeborn
 description: A crossplatform routing based on Navigator 2.0 capable of handling nested navigation with ease.
-version: 0.4.0
+version: 0.4.2
 repository: https://github.com/KristianBalaj/routeborn
 
 environment:

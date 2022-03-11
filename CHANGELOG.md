@@ -1,4 +1,7 @@
 # 0.4.1
+- **fix:** disable duration of route animations on web
+
+# 0.4.1
 - **feat:** specifying route transitions per platform
 
 # 0.4.0
