@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:routeborn/src/navigation_notifier.dart';
 import 'package:routeborn/src/pages_configuration.dart';

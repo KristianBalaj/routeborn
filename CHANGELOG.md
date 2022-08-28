@@ -1,4 +1,7 @@
-# 0.4.1
+# 0.4.3
+- **fix:** bump deps
+
+# 0.4.2
 - **fix:** disable duration of route animations on web
 
 # 0.4.1

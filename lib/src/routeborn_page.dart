@@ -121,7 +121,7 @@ mixin UpdatablePageNameMixin on RoutebornPage {
 
     if ((pageSettings as UpdatablePageNameMixin)._pageNameNotifier.value !=
         pageName) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         pageSettings._pageNameNotifier.value = pageName;
       });
     }
